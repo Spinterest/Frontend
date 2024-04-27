@@ -1,2 +1,2 @@
 # Frontend
-API and Database
+HTML and CSS
