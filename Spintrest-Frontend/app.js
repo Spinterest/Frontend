@@ -1,30 +1,17 @@
-var http = require('http');
-var fs = require('fs');
-var url = require('url');
+const express = require('express');
+const path = require('path');
 
-// Create a server
-http.createServer( function (request, response) {  
-   // Parse the request containing file name
-   var pathname = url.parse(request.url).pathname;
-   
-   // Print the name of the file for which request is made.
-   console.log("Request for " + pathname + " received.");
-   
-   // Read the requested file content from file system
-   fs.readFile("./HTML/home.html", function (err, data) {
-      if (err) {
-         console.log(err);
-      } else {
-         response.writeHead(200, {'Content-Type': 'text/html'});	
-         
-         // Write the content of the file to response body
-         response.write(data.toString());		
-      }
-      
-      // Send the response body 
-      response.end();
-   });   
-}).listen(3000);
+const app = express();
+const port = process.env.PORT || 3000;
 
-// Console will print the message
-console.log('Server running at http://127.0.0.1:3000/');
+// sendFile will go here
+app.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname, 'HTML/index.html'));
+});
+
+app.get('/style.css', function(req, res) {
+   res.sendFile(__dirname + "/CSS/style.css");
+ });
+
+app.listen(port);
+console.log('Server started at http://localhost:' + port)
