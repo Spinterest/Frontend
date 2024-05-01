@@ -5,7 +5,6 @@ export class NavigationBar extends HTMLElement {
 
     constructor() {
         super();
-        console.log("nav");
     }
 
     connectedCallback() {
@@ -42,7 +41,6 @@ export class NavigationBar extends HTMLElement {
                     homeButton.classList.add('active');
                     pinButton.classList.remove('active');
                     boardButton.classList.remove('active');
-                    console.log("home");
                 }
 
                 homeButton.addEventListener("click",home);
@@ -53,7 +51,6 @@ export class NavigationBar extends HTMLElement {
                     homeButton.classList.remove('active');
                     pinButton.classList.add('active');
                     boardButton.classList.remove('active');
-                    console.log("pin");
                 }
 
                 pinButton.addEventListener("click",pin);
@@ -62,7 +59,6 @@ export class NavigationBar extends HTMLElement {
                     homeButton.classList.remove('active');
                     pinButton.classList.remove('active');
                     boardButton.classList.add('active');
-                    console.log("board");
                 }
 
                 boardButton.addEventListener("click",board);
