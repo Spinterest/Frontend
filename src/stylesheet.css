@@ -9,3 +9,8 @@
 body {
     font-family: "Roboto Light", sans-serif;
 }
+
+main {
+    padding: 2em;
+    background-color: var(--primary-bg-color);
+}

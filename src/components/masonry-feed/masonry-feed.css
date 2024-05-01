@@ -1,0 +1,35 @@
+article {
+    column-count: 5;
+    column-gap: 1em;
+}
+
+section {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 1em;
+}
+
+img {
+    display:block;
+    width: 100%;
+    border-radius: 1em;
+    cursor: pointer;
+}
+
+/*@media (max-width: 1200px) {*/
+/*  article {*/
+/*    column-count: 3;*/
+/*  }*/
+/*}*/
+
+/*@media (max-width: 768px) {*/
+/*  article {*/
+/*    column-count: 2;*/
+/*  }*/
+/*}*/
+
+/*@media (max-width: 480px) {*/
+/*  article {*/
+/*    column-count: 1;*/
+/*  }*/
+/*}*/
