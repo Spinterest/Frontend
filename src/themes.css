@@ -4,12 +4,14 @@
     --tertiary-bg-color-dark: #DC5F00;
 
     --text-color-dark: #FFFFFF;
+    --secondary-text-color-dark: #DC5F00;
 
     --primary-bg-color-light: #FFFFFF;
     --secondary-bg-color-light: #EEEEEE;
     --tertiary-bg-color-light: #DC5F00;
 
     --text-color-light: #000000;
+    --secondary-text-color-light: #DC5F00;
 }
 
 
@@ -18,7 +20,8 @@
     --secondary-bg-color: var(--secondary-bg-color-dark);
     --tertiary-bg-color: var(--tertiary-bg-color-dark);
 
-    --text_color: var(--text-color-dark);
+    --text-color: var(--text-color-dark);
+    --secondary-text-color: var(--secondary-text-color-dark)
 }
 
 .light-mode {
@@ -26,5 +29,6 @@
     --secondary-bg-color: var(--secondary-bg-color-light);
     --tertiary-bg-color: var(--tertiary-bg-color-light);
 
-    --text_color: var(--text-color-light);
+    --text-color: var(--text-color-light);
+    --secondary-text-color: var(--secondary-text-color-light)
 }
