@@ -1,0 +1,30 @@
+:root {
+    --primary-bg-color-dark: #000000;
+    --secondary-bg-color-dark: #191919;
+    --tertiary-bg-color-dark: #DC5F00;
+
+    --text-color-dark: #FFFFFF;
+
+    --primary-bg-color-light: #FFFFFF;
+    --secondary-bg-color-light: #EEEEEE;
+    --tertiary-bg-color-light: #DC5F00;
+
+    --text-color-light: #000000;
+}
+
+
+.dark-mode {
+    --primary-bg-color: var(--primary-bg-color-dark);
+    --secondary-bg-color: var(--secondary-bg-color-dark);
+    --tertiary-bg-color: var(--tertiary-bg-color-dark);
+
+    --text_color: var(--text-color-dark);
+}
+
+.light-mode {
+    --primary-bg-color: var(--primary-bg-color-light);
+    --secondary-bg-color: var(--secondary-bg-color-light);
+    --tertiary-bg-color: var(--tertiary-bg-color-light);
+
+    --text_color: var(--text-color-light);
+}
