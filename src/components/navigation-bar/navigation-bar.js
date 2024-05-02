@@ -14,7 +14,6 @@ export class NavigationBar extends HTMLElement {
                 this.innerHTML = html;
                 this.addNavigation();
                 this.addButtonEvents();
-                
             });
     }
 
