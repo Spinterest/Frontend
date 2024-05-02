@@ -1,0 +1,28 @@
+#feed{
+    background-color: var(--primary-bg-color);
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+#create-card{
+    background-color: var(--secondary-bg-color);
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    height: 10em;
+    width: 10em;
+}
+
+div{
+    padding: 1em;
+}
+
+#addBoardText{
+    align-content: center;
+    justify-content: center;
+}
+
+#create-card{
+    display: flex;
+}

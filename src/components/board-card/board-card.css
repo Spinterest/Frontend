@@ -1,0 +1,29 @@
+div .card{
+    background-color: var(--secondary-bg-color);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    height: 10em;
+    width: 10em;
+    border-radius: 0.5em;
+    align-content: center;
+    justify-content: center;
+}
+
+div h4{
+    padding-top: 0.5em;
+}
+
+.subtitle{
+    font-size: 0.6em;
+    color: var(--tertiary-text-color);
+    padding-top: 0.1em;
+}
+
+.image{
+    background-color: var(--quarternary-bg-color);
+    height: 4.5em;
+    width: 4.5em;
+    border-radius: 0.5em;
+    margin: 0.15em;
+}
