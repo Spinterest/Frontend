@@ -1,0 +1,23 @@
+img {
+    display:block;
+    width: 100%;
+    border-radius: 1em;
+}
+article {
+    column-count: auto;
+    column-gap: 1em;
+    column-width: 20em;
+}
+
+section {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 1em;
+}
+
+img {
+    display:block;
+    width: 100%;
+    border-radius: 1em;
+    cursor: pointer;
+}
