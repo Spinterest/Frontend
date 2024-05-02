@@ -12,7 +12,8 @@ export class BoardFeed extends HTMLElement {
             .then(response => response.text())
             .then(html => {            
                 this.innerHTML = html;
-                this.populateFeed()
+                this.addButtonEvents();
+                this.populateFeed();
             });
     }
 
@@ -23,5 +24,16 @@ export class BoardFeed extends HTMLElement {
 
     populateFeed() {
         customElements.define('board-card', BoardCard);
+    }
+
+    addButtonEvents() {
+        const showCreateBoardButton = document.getElementById('create-card');
+        const createBoardPopup = document.getElementById('create-board');
+        const createBoardButton = document.getElementById('btnCreate');
+
+        showCreateBoardButton.addEventListener('click', () => {createBoardPopup.showModal();})
+        createBoardButton.addEventListener('click', () => {
+            createBoardPopup.close();
+        })
     }
 }
