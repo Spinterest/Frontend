@@ -13,17 +13,12 @@ export class BoardFeed extends HTMLElement {
             .then(html => {            
                 this.innerHTML = html;
                 this.addButtonEvents();
-                this.populateFeed();
             });
     }
 
     attributeChangedCallback(property, oldValue, newValue) {
         if (oldValue === newValue) return;
         this[property] = newValue;
-    }
-
-    populateFeed() {
-        
     }
 
     addButtonEvents() {
