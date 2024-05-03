@@ -85,3 +85,13 @@ dialog section form{
     padding: 0.75em;
     resize: none;
 }
+
+@media only screen and (orientation: portrait) {
+    pin-feed {
+        width: 100%;
+    }
+    main {
+        width:100%;
+        padding: 2em 0;
+    }
+  }

@@ -65,6 +65,7 @@ article > section {
     grid-template-columns: 4fr 1fr;
     column-gap: 1em;
     padding: 1em;
+    width: 100%;
 }
 
 .comment > button {
@@ -140,6 +141,22 @@ article > section {
     padding: 1em;
     cursor: pointer;
 }
+
+@media only screen and (orientation: portrait) {
+    article {
+        width: 100%;
+    }
+    article > img {
+        width: 100%;
+    }
+    
+    article > section {
+        width: 100%;
+    }
+    .spin-crawler{
+        font-size: 2em;
+    }
+  }
 
 
 /* Image Hover Dropdown */
