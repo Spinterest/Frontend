@@ -1,28 +1,28 @@
 <link rel="stylesheet" href="/components/board-feed/board-feed.css">
 
-<div id="feed">
-    <div id="card-list">
-        <div class="card" id="create-card">
+<article class="feed">
+    <article id="card-list">
+        <section class="card" id="create-card">
             <svg xmlns="http://www.w3.org/2000/svg" width="5em" height="5em" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
                  <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
             </svg>
-            <p id="addBoardText">Add Board</p>
-        </div>
+            <span>Add Board</span>
+        </section>
         <h4>New Board</h4>
-    </div>
+    </article>
     <board-card></board-card>
-</div>
+</article>
 <dialog class="modal" id="create-board">
-    <div>
+    <section>
         <h2>Create Board</h2>
-        <section id="underline"></section>
+        <section class="underline"></section>
         <br>
         <form method="dialog">
-            <input type="text" placeholder="Title" id="inpTitle">
+            <input type="text" placeholder="Title" id="inpTitle" class="formInput">
             <br>
             <textarea name="description" id="txtDesc" placeholder="Description"></textarea>
             <br>
             <button id="btnCreate">Create</button>
         </form>
-    </div>
+    </section>
 </dialog>

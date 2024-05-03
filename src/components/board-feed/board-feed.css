@@ -1,4 +1,4 @@
-#feed{
+.feed{
     background-color: var(--primary-bg-color);
     display: flex;
     flex-wrap: wrap;
@@ -14,33 +14,29 @@
     width: 10em;
 }
 
-div{
+article{
     padding: 1em;
 }
 
-#addBoardText{
+span{
     align-content: center;
     justify-content: center;
 }
 
 #create-card{
     display: flex;
-    cursor: pointer;
 }
 
-#create-board{
+.modal{
     height: 25em;
     width: 40em;
     background-color: var(--secondary-bg-color);
     justify-content: center;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    margin: auto;
     border-radius: 0.75em
 }
 
-dialog div{
+dialog section{
     height: 100%;
     width: 100%;
     display: flex;
@@ -49,14 +45,13 @@ dialog div{
     flex-direction: column;
 }
 
-dialog div h2{
+dialog section h2{
     color: var(--text-color);
     text-align: center;
     width: 100%;
-    padding-bottom: 0.3em;
 }
 
-dialog div button{
+dialog section button{
     background-color: var(--tertiary-bg-color);
     height: 2rem;
     width: 20rem;
@@ -66,15 +61,16 @@ dialog div button{
     cursor: pointer;
 }
 
-dialog div form{
+dialog section form{
     display: grid;
     justify-content: center;
     align-items: center;
     grid-row: 1fr 1fr 1fr;
     width: 100%;
+    padding-block: 0.3em;
 }
 
-#inpTitle {
+.formInput {
     color: var(--text-color);
     background-color: var(--primary-bg-color);
     height: 3.5em;
@@ -93,7 +89,7 @@ dialog div form{
     resize: none;
 }
 
-#underline {
+.underline {
     background-color: var(--text-color);
     height: 0.3em;
     width: 3em;

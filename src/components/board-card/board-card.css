@@ -1,4 +1,4 @@
-div .card{
+.card{
     background-color: var(--secondary-bg-color);
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -8,9 +8,10 @@ div .card{
     border-radius: 0.5em;
     align-content: center;
     justify-content: center;
+    cursor: pointer;
 }
 
-div h4{
+article h4{
     padding-top: 0.5em;
 }
 
