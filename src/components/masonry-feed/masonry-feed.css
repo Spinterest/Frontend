@@ -32,10 +32,5 @@ article button {
 
 #create-image{
     height: 35em;
-    width: 40em;
-    background-color: var(--secondary-bg-color);
-    justify-content: center;
-    margin: auto;
-    border-radius: 0.75em
 }
 
