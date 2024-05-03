@@ -23,7 +23,7 @@ export class BoardFeed extends HTMLElement {
     }
 
     populateFeed() {
-        customElements.define('board-card', BoardCard);
+        
     }
 
     addButtonEvents() {
