@@ -153,6 +153,12 @@ export class MasonryFeed extends HTMLElement {
                 <span>Create Spin</span>
             `;
 
+            const modal = document.getElementById('create-image');
+
+            button.addEventListener('click', () => {
+                modal.showModal()
+            })
+
             article.appendChild(button);
         }
 
