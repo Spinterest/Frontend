@@ -1,12 +1,12 @@
-export class BoardCard extends HTMLElement {
+export class WebCard extends HTMLElement {
 
     constructor() {
         super();
-        this.pins = []
+        this.spins = []
     }
 
     connectedCallback() {
-        fetch('components/board-card/board-card.html')
+        fetch('components/web-card/web-card.html')
             .then(response => response.text())
             .then(html => {
                 this.innerHTML = html;
@@ -21,7 +21,7 @@ export class BoardCard extends HTMLElement {
 
     populateFeed() {
         const article = this.querySelector('article');
-        // for each imageUrl in the pins list, go get the image (or attach to src - we could just use the src as s3 bucket source.)
+        // for each imageUrl in the spins list, go get the image (or attach to src - we could just use the src as s3 bucket source.)
         // create the tag - <section><img src="images/2.png" alt=""></section>
         // add tag to article.
     }

@@ -32,34 +32,34 @@ export class NavigationBar extends HTMLElement {
 
     addButtonEvents() {
         const homeButton = document.getElementById("btnHome");
-                const pinButton = document.getElementById("btnPin");
-                const boardButton = document.getElementById("btnBoard");
+                const spinButton = document.getElementById("btnSpin");
+                const webButton = document.getElementById("btnWeb");
                 const spiderImage = document.getElementById("imgSpider");
 
                 function home(){
                     homeButton.classList.add('active');
-                    pinButton.classList.remove('active');
-                    boardButton.classList.remove('active');
+                    spinButton.classList.remove('active');
+                    webButton.classList.remove('active');
                 }
 
                 homeButton.addEventListener("click",home);
 
                 spiderImage.addEventListener("click",home);
 
-                function pin(){
+                function spin(){
                     homeButton.classList.remove('active');
-                    pinButton.classList.add('active');
-                    boardButton.classList.remove('active');
+                    spinButton.classList.add('active');
+                    webButton.classList.remove('active');
                 }
 
-                pinButton.addEventListener("click",pin);
+                spinButton.addEventListener("click",spin);
 
-                function board(){
+                function web(){
                     homeButton.classList.remove('active');
-                    pinButton.classList.remove('active');
-                    boardButton.classList.add('active');
+                    spinButton.classList.remove('active');
+                    webButton.classList.add('active');
                 }
 
-                boardButton.addEventListener("click",board);
+                webButton.addEventListener("click",web);
     }
 }

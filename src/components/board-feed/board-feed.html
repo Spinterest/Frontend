@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="/components/board-feed/board-feed.css">
+<link rel="stylesheet" href="/components/web-feed/web-feed.css">
 
 <article class="feed">
     <article id="card-list">
@@ -6,21 +6,21 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="5em" height="5em" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
                  <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
             </svg>
-            <span>Add Board</span>
+            <span>Add Web</span>
         </section>
-        <h4>New Board</h4>
+        <h4>New Web</h4>
     </article>
-    <board-card></board-card>
+    <web-card></web-card>
 </article>
-<dialog class="modal" id="create-board">
+<dialog class="modal" id="create-web">
     <section>
-        <h2>Create Board</h2>
+        <h2>Create Web</h2>
         <section class="underline"></section>
         <br>
         <form method="dialog">
-            <input type="text" placeholder="Title" id="inpBoardTitle" class="formInput">
+            <input type="text" placeholder="Title" id="inpWebTitle" class="formInput">
             <br>
-            <textarea name="description" id="txtBoardDesc" class="formTextArea" placeholder="Description"></textarea>
+            <textarea name="description" id="txtWebDesc" class="formTextArea" placeholder="Description"></textarea>
             <br>
             <button id="btnCreate">Create</button>
         </form>

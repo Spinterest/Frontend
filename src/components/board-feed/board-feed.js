@@ -1,14 +1,14 @@
-import {BoardCard} from "../board-card/board-card.js";
+import {BoardCard} from "../web-card/web-card.js";
 
-export class BoardFeed extends HTMLElement {
+export class WebFeed extends HTMLElement {
 
     constructor() {
         super();
-        this.pins = []
+        this.spins = []
     }
 
     connectedCallback() {
-        fetch('components/board-feed/board-feed.html')
+        fetch('components/web-feed/web-feed.html')
             .then(response => response.text())
             .then(html => {            
                 this.innerHTML = html;
@@ -22,13 +22,13 @@ export class BoardFeed extends HTMLElement {
     }
 
     addButtonEvents() {
-        const showCreateBoardButton = document.getElementById('create-card');
-        const createBoardPopup = document.getElementById('create-board');
-        const createBoardButton = document.getElementById('btnCreate');
+        const showCreateWebButton = document.getElementById('create-card');
+        const createWebPopup = document.getElementById('create-web');
+        const createWebButton = document.getElementById('btnCreate');
 
-        showCreateBoardButton.addEventListener('click', () => {createBoardPopup.showModal();})
-        createBoardButton.addEventListener('click', () => {
-            createBoardPopup.close();
+        showCreateWebButton.addEventListener('click', () => {createWebPopup.showModal();})
+        createWebButton.addEventListener('click', () => {
+            createWebPopup.close();
         })
     }
 }
