@@ -4,6 +4,7 @@ export class Router {
         '/'           : 'home.html',
         '/boards'     : 'boards.html',
         '/pins'       : 'pins.html',
+        '/pin'       : 'pins.html',
     };
 
     constructor() {
