@@ -28,3 +28,10 @@ article h4{
     border-radius: 0.5em;
     margin: 0.15em;
 }
+
+.image img{
+    height: 4.5em;
+    width: 4.5em;
+    object-fit: cover;
+    border-radius: 0.5em;
+}
