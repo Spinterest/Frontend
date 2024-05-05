@@ -1,0 +1,165 @@
+article {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 3em;
+
+    padding: 0 4em;
+}
+
+article > * {
+    border-radius: 1em;
+}
+
+article > img {
+    width: 35em;
+    margin: auto 0;
+}
+
+article > section {
+    background-color: var(--secondary-bg-color);
+    color: var(--text-color);
+
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+    padding: 2em;
+    width: 35em;
+}
+
+.spin-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+}
+
+.spin-details > p:first-child {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+}
+
+.spin-details > p:first-child span {
+    font-size: xx-large;
+}
+
+.comments {
+    height: 100%;
+    background-color: var(--primary-bg-color);
+    border-radius: 1em;
+    padding: 2em;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2em;
+
+}
+
+.comment {
+    background-color: var(--secondary-bg-color);
+    border-radius: 1em;
+
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    column-gap: 1em;
+    padding: 1em;
+    width: 100%;
+}
+
+.comment > button {
+    align-self: end;
+    justify-self: end;
+
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.5em;
+
+    background-color: transparent;
+    color: var(--text-color);
+    width: fit-content;
+    border: none;
+    cursor: pointer;
+}
+
+.comment > h3 {
+    grid-column: span 2;
+}
+
+.commentInput {
+    display: grid;
+    grid-template-columns: 7fr 1fr;
+    column-gap: 1em;
+
+    width: 100%;
+    margin-top: auto;
+}
+
+.commentInput > label {
+    background-color: #191919;
+    border-radius: 1em;
+    display: grid;
+    grid-template-columns: 6fr 1fr;
+    color: var(--text-color);
+}
+
+.commentInput input {
+    background-color: transparent;
+    color: var(--text-color);
+    border: none;
+    padding: 1em;
+}
+
+.commentInput input::placeholder {
+    color: var(--text-color);
+}
+
+.commentInput label button {
+    background-color: transparent;
+    border: none;
+}
+
+
+.commentInput label button svg {
+    fill: var(--text-color);
+}
+
+.commentInput > button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5em;
+
+    border-radius: 1em;
+    background-color: var(--secondary-bg-color);
+    color: var(--text-color);
+    border: none;
+    padding: 1em;
+    cursor: pointer;
+}
+
+@media only screen and (orientation: portrait) {
+    article {
+        width: 100%;
+    }
+    article > img {
+        width: 100%;
+    }
+    
+    article > section {
+        width: 100%;
+    }
+    .spin-crawler{
+        font-size: 2em;
+    }
+  }
+
+
+/* Image Hover Dropdown */
+article > img:hover {
+
+}
