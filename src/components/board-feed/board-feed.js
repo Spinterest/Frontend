@@ -4,7 +4,22 @@ export class BoardFeed extends HTMLElement {
 
     constructor() {
         super();
-        this.pins = []
+        this.boards = [
+            {
+                "webID": 14,
+                "crawlerID": 5,
+                "webDescription": "desc",
+                "webIsDeleted": false,
+                "webTitle": "title"
+            },
+            {
+                "webID": 16,
+                "crawlerID": 7,
+                "webDescription": "desc",
+                "webIsDeleted": false,
+                "webTitle": "title"
+            }
+        ]
     }
 
     connectedCallback() {
@@ -13,6 +28,7 @@ export class BoardFeed extends HTMLElement {
             .then(html => {            
                 this.innerHTML = html;
                 this.addButtonEvents();
+                this.populateFeed();
             });
     }
 
@@ -29,6 +45,17 @@ export class BoardFeed extends HTMLElement {
         showCreateBoardButton.addEventListener('click', () => {createBoardPopup.showModal();})
         createBoardButton.addEventListener('click', () => {
             createBoardPopup.close();
+        })
+    }
+
+    populateFeed() {
+        const feed = document.getElementById("card-feed");
+
+        this.boards.forEach(board => {
+            const boardCard = document.createElement('board-card');
+            boardCard.boardId = board.webID;
+
+            feed.appendChild(boardCard);
         })
     }
 }

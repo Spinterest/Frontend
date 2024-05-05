@@ -4,7 +4,7 @@ export class Router {
         '/'           : 'home.html',
         '/boards'     : 'boards.html',
         '/pins'       : 'pins.html',
-        '/pin'       : 'pins.html',
+        '/pin'        : 'pin.html',
     };
 
     constructor() {
@@ -41,8 +41,8 @@ export class Router {
             });
     }
 
-    handleNavigation(path = '/') {
-        history.pushState(null, null, path);
+    handleNavigation(path = '/', data = null) {
+        history.pushState(data, null, path);
         this.loadContent(path);
     }
 

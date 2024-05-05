@@ -105,3 +105,13 @@ label span {
     float: right;
     padding-top: 0.2em;
 }
+
+@media only screen and (orientation: portrait) {
+    pin-feed {
+        width: 100%;
+    }
+    main {
+        width:100%;
+        padding: 2em 0;
+    }
+  }

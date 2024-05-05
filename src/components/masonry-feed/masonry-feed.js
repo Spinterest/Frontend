@@ -1,3 +1,5 @@
+import {Router} from "../../js/Router.js";
+
 export class MasonryFeed extends HTMLElement {
 
     constructor() {
@@ -162,14 +164,18 @@ export class MasonryFeed extends HTMLElement {
             article.appendChild(button);
         }
 
+        const router = new Router();
         this.pins.forEach(pin => {
             const img = document.createElement('img')
             img.src = pin.pinLink;
             img.alt = pin.pinDescription
 
             article.appendChild(img);
-        })
 
+            img.addEventListener('click', (e) => {
+                router.handleNavigation('/pin', pin);
+            })
+        })
     }
 
 
