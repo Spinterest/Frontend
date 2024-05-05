@@ -85,3 +85,23 @@ dialog section form{
     padding: 0.75em;
     resize: none;
 }
+
+label.formInput {
+    justify-content: center;
+    height: 3em;
+    cursor: pointer;
+}
+
+label input[type="file"] {
+    display: none;
+}
+
+label span {
+    color: gray;
+    font-size: small;
+}
+
+#upload-icon {
+    float: right;
+    padding-top: 0.2em;
+}
