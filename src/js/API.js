@@ -132,6 +132,15 @@ export class ComplexController {
             callBack
         );
     };
+
+    getWebCard(webID, callBack){
+        console.log(`${localBaseURL}/${this.baseURL}/web/${webID}`);
+        apiCallBuilder(
+            `${localBaseURL}/${this.baseURL}/web/${webID}`,
+            callTypes.get,
+            callBack
+        );
+    };
 }
 
 export class CrawlerController{

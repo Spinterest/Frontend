@@ -1,25 +1,13 @@
 import {BoardCard} from "../board-card/board-card.js";
+import {
+    WebController, WebSpinsController
+} from "../../js/api.js";
 
 export class BoardFeed extends HTMLElement {
 
     constructor() {
         super();
-        this.boards = [
-            {
-                "webID": 14,
-                "crawlerID": 5,
-                "webDescription": "desc",
-                "webIsDeleted": false,
-                "webTitle": "title"
-            },
-            {
-                "webID": 16,
-                "crawlerID": 7,
-                "webDescription": "desc",
-                "webIsDeleted": false,
-                "webTitle": "title"
-            }
-        ]
+        this.webClass = new WebController ();
     }
 
     connectedCallback() {
@@ -28,7 +16,7 @@ export class BoardFeed extends HTMLElement {
             .then(html => {            
                 this.innerHTML = html;
                 this.addButtonEvents();
-                this.populateFeed();
+                this.getData();
             });
     }
 
@@ -55,15 +43,31 @@ export class BoardFeed extends HTMLElement {
         });
     }
 
-    populateFeed() {
+    getData(){
+        this.webClass.getUserWebsWithUserID(
+            0,
+            this.populateFeed.bind(this)
+        );
+    }
+
+    populateFeed(boards) {
         const feed = document.getElementById("card-feed");
 
-        this.boards.forEach(board => {
+        try {
+            boards.forEach(board => {
+                const boardCard = document.createElement('board-card');
+                boardCard.webID = board.webID;
+    
+                feed.appendChild(boardCard);
+            })
+            
+        } catch (error) {
             const boardCard = document.createElement('board-card');
-            boardCard.boardId = board.webID;
+            boardCard.webID = boards.webID;
 
-            feed.appendChild(boardCard);
-        })
+            feed.appendChild(boardCard); 
+        }
+        
     }
 
     closePopup(createBoardPopup, titleInput, descriptionTextArea){
