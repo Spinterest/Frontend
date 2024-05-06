@@ -45,7 +45,7 @@ export class BoardFeed extends HTMLElement {
 
     getData(){
         this.webClass.getUserWebsWithUserID(
-            0,
+            1,
             this.populateFeed.bind(this)
         );
     }
