@@ -119,6 +119,7 @@ label span {
 
 .filled {
     color: var(--text-color) !important;
+    fill: var(--text-color) !important;
 }
 
 @media only screen and (orientation: portrait) {

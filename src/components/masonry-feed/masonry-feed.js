@@ -139,7 +139,6 @@ export class MasonryFeed extends HTMLElement {
             .then(html => {
                 this.innerHTML = html;
                 this.populateFeed();
-                this.addButtonEvents();
             });
     }
 
@@ -170,8 +169,11 @@ export class MasonryFeed extends HTMLElement {
                 const fileName = this.files.item(0).name;
                 const imageLabel = document.getElementById("lblImg");
                 const imageSpan = document.getElementById("spnImg");
+                const uploadIcon = document.getElementById("upload-icon");
                 imageLabel.classList.add("filled");
                 imageSpan.textContent = fileName;
+                imageSpan.classList.add("filled");
+                uploadIcon.classList.add("filled");
             };
     
             document.getElementById('btnClose').addEventListener('click', () => 
@@ -204,15 +206,17 @@ export class MasonryFeed extends HTMLElement {
         const descriptionTextArea = document.getElementById("txtDesc");
         const tagsInput = document.getElementById("inpTag");
         const imageInput = document.getElementById("inpImg");
+        const uploadIcon = document.getElementById("upload-icon");
+        const imageLabel = document.getElementById("lblImg");
+        const imageSpan = document.getElementById("spnImg");
 
         titleInput.value="";
         descriptionTextArea.value="";
         tagsInput.value="";
         imageInput.value="";
-
-        const imageLabel = document.getElementById("lblImg");
-        const imageSpan = document.getElementById("spnImg");
         imageLabel.classList.remove("filled");
+        imageSpan.classList.remove("filled");
+        uploadIcon.classList.remove("filled");
         imageSpan.textContent = "Select Image";
 
         modal.close();
