@@ -494,13 +494,12 @@ export const apiCallBuilder = async (
         delete options.body;
     }
 
-    console.log("url", url)
-    console.log("options", options)
-
     fetch(url, options)
     .then(async (response)  =>  {
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            console.error('Network response was not ok');
+            callback(null);
+            return;
         }
 
         const data = await response.json()

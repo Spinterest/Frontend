@@ -1,13 +1,7 @@
 import {Router} from "../../js/Router.js";
 import {
     ComplexController,
-    SpinController,
-    CommentLikesController,
-    CrawlerController,
-    SpinCommentController,
-    SpinLikesController,
-    SpinTagsController,
-    TagController, WebController, WebSpinsController
+    SpinController
 } from "../../js/api.js";
 
 export class MasonryFeed extends HTMLElement {
@@ -43,7 +37,7 @@ export class MasonryFeed extends HTMLElement {
             .then(response => response.text())
             .then(html => {
                 this.innerHTML = html;
-                this.loadData();;
+                this.loadData();
             });
     }
 

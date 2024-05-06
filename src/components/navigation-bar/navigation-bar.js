@@ -1,4 +1,5 @@
 import {Router} from "../../js/Router.js";
+import {CrawlerController} from "../../js/api.js";
 
 
 export class NavigationBar extends HTMLElement {
@@ -31,35 +32,93 @@ export class NavigationBar extends HTMLElement {
     }
 
     addButtonEvents() {
-        const homeButton = document.getElementById("btnHome");
-                const pinButton = document.getElementById("btnPin");
-                const boardButton = document.getElementById("btnBoard");
-                const spiderImage = document.getElementById("imgSpider");
+        const btnHome = document.getElementById("btnHome");
+        const btnPin = document.getElementById("btnPin");
+        const btnBoard = document.getElementById("btnBoard");
+        const imgSpider = document.getElementById("imgSpider");
+        const btnEditProfile = document.getElementById("btnEditProfile");
 
-                function home(){
-                    homeButton.classList.add('active');
-                    pinButton.classList.remove('active');
-                    boardButton.classList.remove('active');
-                }
+        const labelUpdateUsernameError = document.getElementById("labelUpdateUsernameError");
+        const inpUsername = document.getElementById("inpUsername");
+        const modalEditProfile = document.getElementById("modelEditProfile");
+        const btnUpdateUsername = document.getElementById("btnUpdateUsername");
+        const btnCloseUpdateUsername = document.getElementById("btnCloseUpdateUsername");
 
-                homeButton.addEventListener("click",home);
+        labelUpdateUsernameError.style.display = 'none';
 
-                spiderImage.addEventListener("click",home);
+        function home(){
+            btnHome.classList.add('active');
+            btnPin.classList.remove('active');
+            btnBoard.classList.remove('active');
+        }
 
-                function pin(){
-                    homeButton.classList.remove('active');
-                    pinButton.classList.add('active');
-                    boardButton.classList.remove('active');
-                }
+        btnHome.addEventListener("click",home);
+        imgSpider.addEventListener("click",home);
 
-                pinButton.addEventListener("click",pin);
+        btnPin.addEventListener(
+            "click",
+            () => {
+                btnHome.classList.remove('active');
+                btnPin.classList.add('active');
+                btnBoard.classList.remove('active');
+            }
+        );
 
-                function board(){
-                    homeButton.classList.remove('active');
-                    pinButton.classList.remove('active');
-                    boardButton.classList.add('active');
-                }
+        btnBoard.addEventListener(
+            "click",
+            () => {
+                btnHome.classList.remove('active');
+                btnPin.classList.remove('active');
+                btnBoard.classList.add('active');
+            }
+        );
 
-                boardButton.addEventListener("click",board);
+        function closeModal(){
+            inpUsername.value = '';
+            labelUpdateUsernameError.style.display = 'none';
+
+            modalEditProfile.close();
+        }
+
+        btnEditProfile.addEventListener('click', () => {modalEditProfile.showModal();});
+        btnCloseUpdateUsername.addEventListener("click", closeModal.bind(this));
+
+        btnUpdateUsername.addEventListener(
+            'click',
+            (event) => {
+                event.preventDefault();
+
+                // Todo, can use email or ID, add proper one though
+                const crawlerController = new CrawlerController();
+
+                const crawlerID = 3
+                // const crawlerEmail = "katlego.kungoane@bbd.co.za"
+
+                // crawlerController.editCrawlerNameWithEmail(crawlerEmail, callBack);
+                crawlerController.editCrawlerNameWithID(
+                    {
+                        crawlerID: crawlerID,
+                        crawlerUserName: inpUsername.value
+                    },
+                    (data) => {
+                        // Todo, maybe add red glow on button for error
+                        // The update didnt happen
+                        if (data.hasOwnProperty('alert')){
+                            labelUpdateUsernameError.textContent = data.alert;
+                            labelUpdateUsernameError.style.display = 'inherit';
+                            return;
+                        }
+
+                        if (!data || data.crawlerUserName !== inpUsername.value){
+                            labelUpdateUsernameError.style.display = 'inherit';
+                            return;
+                        }
+
+                        // Todo, maybe add a successful animation
+                        closeModal();
+                    }
+                )
+            }
+        )
     }
 }
