@@ -32,5 +32,6 @@ article button {
 
 #create-image{
     height: 35em;
+    overflow: hidden;
 }
 

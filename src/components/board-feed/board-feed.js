@@ -41,11 +41,18 @@ export class BoardFeed extends HTMLElement {
         const showCreateBoardButton = document.getElementById('create-card');
         const createBoardPopup = document.getElementById('create-board');
         const createBoardButton = document.getElementById('btnCreate');
+        const titleInput = document.getElementById("inpBoardTitle");
+        const descriptionTextArea = document.getElementById("txtBoardDesc");
 
-        showCreateBoardButton.addEventListener('click', () => {createBoardPopup.showModal();})
-        createBoardButton.addEventListener('click', () => {
-            createBoardPopup.close();
-        })
+        showCreateBoardButton.addEventListener('click', () => {createBoardPopup.showModal();});
+        createBoardButton.addEventListener('click', () => 
+        {
+            this.closePopup(createBoardPopup, titleInput, descriptionTextArea);
+        });
+        document.getElementById('btnClose').addEventListener('click', () => 
+        {
+            this.closePopup(createBoardPopup, titleInput, descriptionTextArea);
+        });
     }
 
     populateFeed() {
@@ -57,5 +64,11 @@ export class BoardFeed extends HTMLElement {
 
             feed.appendChild(boardCard);
         })
+    }
+
+    closePopup(createBoardPopup, titleInput, descriptionTextArea){
+        createBoardPopup.close();
+        titleInput.value="";
+        descriptionTextArea.value="";
     }
 }

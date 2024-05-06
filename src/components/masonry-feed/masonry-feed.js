@@ -138,7 +138,8 @@ export class MasonryFeed extends HTMLElement {
             .then(response => response.text())
             .then(html => {
                 this.innerHTML = html;
-                this.populateFeed()
+                this.populateFeed();
+                this.addButtonEvents();
             });
     }
 
@@ -162,6 +163,26 @@ export class MasonryFeed extends HTMLElement {
             })
 
             article.appendChild(button);
+
+            const buttonCreate = document.getElementById("btnCreate");
+
+            document.getElementById('inpImg').onchange = function () {
+                const fileName = this.files.item(0).name;
+                const imageLabel = document.getElementById("lblImg");
+                const imageSpan = document.getElementById("spnImg");
+                imageLabel.classList.add("filled");
+                imageSpan.textContent = fileName;
+            };
+    
+            document.getElementById('btnClose').addEventListener('click', () => 
+            {
+                this.closeModal(modal);
+            })
+
+            buttonCreate.addEventListener("click", () => 
+            {
+                this.closeModal(modal);
+            })
         }
 
         const router = new Router();
@@ -176,6 +197,25 @@ export class MasonryFeed extends HTMLElement {
                 router.handleNavigation('/pin', pin);
             })
         })
+    }
+
+    closeModal(modal) {
+        const titleInput = document.getElementById("inpTitle");
+        const descriptionTextArea = document.getElementById("txtDesc");
+        const tagsInput = document.getElementById("inpTag");
+        const imageInput = document.getElementById("inpImg");
+
+        titleInput.value="";
+        descriptionTextArea.value="";
+        tagsInput.value="";
+        imageInput.value="";
+
+        const imageLabel = document.getElementById("lblImg");
+        const imageSpan = document.getElementById("spnImg");
+        imageLabel.classList.remove("filled");
+        imageSpan.textContent = "Select Image";
+
+        modal.close();
     }
 
 
