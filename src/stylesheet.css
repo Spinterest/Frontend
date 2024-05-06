@@ -122,6 +122,10 @@ label span {
     fill: var(--text-color);
 }
 
+.hidden {
+    visibility: hidden;
+}
+
 @media only screen and (orientation: portrait) {
     pin-feed {
         width: 100%;
