@@ -23,7 +23,8 @@ main {
     background-color: var(--secondary-bg-color);
     justify-content: center;
     margin: auto;
-    border-radius: 0.75em
+    border-radius: 0.75em;
+    overflow: hidden;
 }
 
 .underline {
@@ -86,6 +87,41 @@ dialog section form{
     resize: none;
 }
 
+label.formInput {
+    justify-content: center;
+    height: 3em;
+    cursor: pointer;
+    max-width: 20em;
+    overflow: hidden;
+}
+
+label input[type="file"] {
+    display: none;
+}
+
+label span {
+    color: gray;
+    font-size: small;
+    max-width: 18em;
+    overflow: hidden;
+}
+
+#upload-icon {
+    float: right;
+    padding-top: 0.2em;
+}
+
+#btnClose {
+    float: right;
+    margin: 0.5em 0.5em auto auto;
+    cursor: pointer;
+}
+
+.filled {
+    color: var(--text-color);
+    fill: var(--text-color);
+}
+
 @media only screen and (orientation: portrait) {
     pin-feed {
         width: 100%;
@@ -94,4 +130,4 @@ dialog section form{
         width:100%;
         padding: 2em 0;
     }
-  }
+}

@@ -43,7 +43,7 @@ export class MasonryFeed extends HTMLElement {
             .then(response => response.text())
             .then(html => {
                 this.innerHTML = html;
-                this.loadData();
+                this.loadData();;
             });
     }
 
@@ -67,6 +67,29 @@ export class MasonryFeed extends HTMLElement {
             })
 
             article.appendChild(button);
+
+            const buttonCreate = document.getElementById("btnCreate");
+
+            document.getElementById('inpImg').onchange = function () {
+                const fileName = this.files.item(0).name;
+                const imageLabel = document.getElementById("lblImg");
+                const imageSpan = document.getElementById("spnImg");
+                const uploadIcon = document.getElementById("upload-icon");
+                imageLabel.classList.add("filled");
+                imageSpan.textContent = fileName;
+                imageSpan.classList.add("filled");
+                uploadIcon.classList.add("filled");
+            };
+    
+            document.getElementById('btnClose').addEventListener('click', () => 
+            {
+                this.closeModal(modal);
+            })
+
+            buttonCreate.addEventListener("click", () => 
+            {
+                this.closeModal(modal);
+            })
         }
 
         const router = new Router();
@@ -81,6 +104,27 @@ export class MasonryFeed extends HTMLElement {
                 router.handleNavigation('/pin', spin);
             })
         })
+    }
+
+    closeModal(modal) {
+        const titleInput = document.getElementById("inpTitle");
+        const descriptionTextArea = document.getElementById("txtDesc");
+        const tagsInput = document.getElementById("inpTag");
+        const imageInput = document.getElementById("inpImg");
+        const uploadIcon = document.getElementById("upload-icon");
+        const imageLabel = document.getElementById("lblImg");
+        const imageSpan = document.getElementById("spnImg");
+
+        titleInput.value="";
+        descriptionTextArea.value="";
+        tagsInput.value="";
+        imageInput.value="";
+        imageLabel.classList.remove("filled");
+        imageSpan.classList.remove("filled");
+        uploadIcon.classList.remove("filled");
+        imageSpan.textContent = "Select Image";
+
+        modal.close();
     }
 
 
