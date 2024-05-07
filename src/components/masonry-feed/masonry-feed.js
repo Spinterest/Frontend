@@ -15,6 +15,9 @@ export class MasonryFeed extends HTMLElement {
     }
 
     loadData(){
+        console.log(localStorage.getItem('crawlerID'));
+        console.log(localStorage.getItem('crawlerEmail'));
+        console.log(localStorage.getItem('crawlerToken'));
         // ToDo, properly get crawlerID / crawlerEmail
         const crawlerID = 3;
 
