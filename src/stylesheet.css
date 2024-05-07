@@ -139,8 +139,8 @@ label span {
 /* Toaster Styles */
 .notifications {
     position: fixed;
-    top: 30px;
-    right: 20px;
+    top: 1em;
+    right: 1em;
 }
 
 .column {
@@ -162,11 +162,12 @@ label span {
     position: relative;
     overflow: hidden;
 
+
     list-style: none;
     border-radius: 0.5em;
     padding: 1em;
     margin-block: 1em;
-    background-color: var(--secondary-bg-color);
+    background-color: var(--tertiary-text-color);
     color: var(--text-color);
     justify-content: space-between;
     animation: show_toast 0.3s ease forwards;
@@ -235,7 +236,7 @@ label span {
 }
 
 .toast.info::before, .btn#info {
-    background: var(--quarternary-bg-color)
+    background: var(--tertiary-bg-color)
 }
 
 @media screen and (max-width: 530px) {
