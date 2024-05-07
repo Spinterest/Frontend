@@ -132,6 +132,17 @@ export class ComplexController {
             callBack
         );
     };
+
+    getCommentsLikedByCrawlerID(
+        crawlerID,
+        callback
+    ){
+        apiCallBuilder(
+            `${localBaseURL}/${this.baseURL}/commentsLikedByCrawlerID/${crawlerID}`,
+            callTypes.get,
+            callback
+        );
+    }
 }
 
 export class CrawlerController{
