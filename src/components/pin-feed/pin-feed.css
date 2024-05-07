@@ -63,7 +63,6 @@ article > section {
 
     display: grid;
     grid-template-columns: 4fr 1fr;
-    gap: 1em;
     padding: 1em;
     width: 100%;
 }
@@ -83,6 +82,13 @@ article > section {
     width: fit-content;
     border: none;
     cursor: pointer;
+
+    padding: 1em;
+    border-radius: 1em;
+}
+
+.comment > button:hover {
+    background-color: var(--quarternary-bg-color);
 }
 
 .comment > h3 {
@@ -95,7 +101,7 @@ article > section {
     gap: 1em;
 
     overflow-y: auto;
-    /*max-height: 20em;*/
+    width: 100%;
 }
 
 .comment-input {
@@ -129,6 +135,12 @@ article > section {
 .comment-input label button {
     background-color: transparent;
     border: none;
+    cursor: pointer;
+}
+
+.comment-input label button:hover {
+    border-radius: 1em;
+    background-color: var(--quarternary-bg-color);
 }
 
 
@@ -149,6 +161,14 @@ article > section {
     border: none;
     padding: 1em;
     cursor: pointer;
+}
+
+.comment-input > button:hover {
+    background-color: var(--quarternary-bg-color);
+}
+
+.active-like {
+    color: var(--tertiary-bg-color) !important;
 }
 
 @media only screen and (orientation: portrait) {
