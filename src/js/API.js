@@ -155,12 +155,12 @@ export class CrawlerController{
         );
     };
 
-    login(crawler, callBack){
+    login(crawlerEmail, callBack){
         apiCallBuilder(
             `${localBaseURL}/${this.baseURL}/login`,
             callTypes.post,
             callBack,
-            {crawlerEmail: crawler.crawlerEmail}
+            {crawlerEmail: crawlerEmail}
         );
     };
 

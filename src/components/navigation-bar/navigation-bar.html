@@ -56,7 +56,15 @@
             </label>
         </li>
 
-        <li>
+        <li id="sign-in">
+            <div id="g_id_onload"
+                data-client_id="938276127101-roljisla2hu5nta50tv888bmj1b2ci95.apps.googleusercontent.com"
+                 data-callback="handleCredentialResponse">
+            </div>
+            <div class="g_id_signin" data-type="standard"></div>
+        </li>
+
+        <li class="hidden" id="profile">
             <!--            TODO: Popup Modal With User Profile dropdown -->
             <div class="dropdown">
                 <button id="btnProfile">
@@ -68,7 +76,7 @@
                 </button>
                 <div class="dropdown-content">
                     <p id="btnEditProfile">Edit Profile</p>
-                    <p>Sign Out</p>
+                    <a href="/"><p id="btnSignOut">Sign Out</p></a>
                 </div>
             </div>
         </li>
