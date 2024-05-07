@@ -1,10 +1,11 @@
 export class Router {
 
     routes = {
-        '/'           : 'home.html',
-        '/boards'     : 'boards.html',
-        '/pins'       : 'pins.html',
-        '/pin'        : 'pin.html',
+        '/': 'home.html',
+        '/boards': 'boards.html',
+        '/pins': 'pins.html',
+        '/pin': 'pin.html',
+        '/boards-view': 'viewBoard.html',
     };
 
     constructor() {
