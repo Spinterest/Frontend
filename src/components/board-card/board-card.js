@@ -1,11 +1,11 @@
-import{ComplexController
-} from "../../js/api.js";
+import{ComplexController} from "../../js/api.js";
 
 export class BoardCard extends HTMLElement {
 
     constructor() {
         super();
-        this.webID = 0;
+        // This came from the element that created you
+        // this.webID = 0;
         this.complexClass = new ComplexController ();
     }
 
@@ -24,55 +24,43 @@ export class BoardCard extends HTMLElement {
     }
 
     getData(){
-        this.complexClass.getWebCard(
-            this.webID,
-            this.populateCard.bind(this)
-        );
+        if (this.webID != null){
+            this.complexClass.getLimitedSpinsForWeb(
+                this.webID,
+                this.populateCard.bind(this)
+            );
+        }
     }
 
-    populateCard(board) {
-        const image1 = document.getElementById("image1");
-        image1.classList.add('hidden');
-        if (board[0].spinLink!=undefined)
-        {
-            image1.src = board[0].spinLink;
-            image1.classList.remove('hidden');
-        };
-        image1.id = this.boardId+"-image1";
+    populateCard(data) {
+        const boardCardContainer = this.querySelector('#board-card-container');
+        const boardCardImageContainer = this.querySelector('#board-card-image-container');
 
-        const image2 = document.getElementById("image2");
-        image2.classList.add('hidden');
-        if (board.length>1)
-        {
-            image2.src = board[1].spinLink;
-            image2.classList.remove('hidden');
-        };
-        image2.id = this.boardId+"-image2"
+        for (let index = 0; index < 4; index++) {
+            const imageSection = document.createElement("section");
+            imageSection.setAttribute('class', 'image');
 
-        const image3 = document.getElementById("image3");
-        image3.classList.add('hidden');
-        if (board.length>2)
-        {
-            image3.src = board[2].spinLink;
-            image3.classList.remove('hidden');
-        };
-        image3.id = this.boardId+"-image3"
+            const image = document.createElement(`img`);
+            image.classList.add('hidden');
+            if (data && index < data.length) {
+                image.src = data[index].spinLink;
+                image.classList.remove('hidden');
+            }
 
-        const image4 = document.getElementById("image4");
-        image4.classList.add('hidden');
-        if (board.length>3)
-        {
-            image4.src = board[3].spinLink;
-            image4.classList.remove('hidden');
-        };
-        image4.id = this.boardId+"-image4"
+            imageSection.appendChild(image);
+            boardCardImageContainer.appendChild(imageSection);
+        }
 
-        const title = document.getElementById("title");
-        title.textContent = board[0].webTitle;
-        title.id = this.boardId+"-title";
+        const title = document.createElement('h4');
+        title.textContent = this.webTitle;
+        title.id = `${this.webID}-title`;
 
-        const subtitle = document.getElementById("subtitle");
-        subtitle.textContent = board[0].webDescription;
-        subtitle.id = this.boardId+"-subtitle";
+        const subtitle = document.createElement('p');
+        subtitle.setAttribute('class', 'board-card-subtitle');
+        subtitle.textContent = this.webDescription || "Description";
+        subtitle.id = `${this.webID}-subtitle`;
+
+        boardCardContainer.appendChild(title);
+        boardCardContainer.appendChild(subtitle);
     }
 }
