@@ -63,7 +63,7 @@ article > section {
 
     display: grid;
     grid-template-columns: 4fr 1fr;
-    column-gap: 1em;
+    gap: 1em;
     padding: 1em;
     width: 100%;
 }
@@ -89,7 +89,16 @@ article > section {
     grid-column: span 2;
 }
 
-.commentInput {
+.comment-output {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+
+    overflow-y: auto;
+    /*max-height: 20em;*/
+}
+
+.comment-input {
     display: grid;
     grid-template-columns: 7fr 1fr;
     column-gap: 1em;
@@ -98,7 +107,7 @@ article > section {
     margin-top: auto;
 }
 
-.commentInput > label {
+.comment-input > label {
     background-color: #191919;
     border-radius: 1em;
     display: grid;
@@ -106,28 +115,28 @@ article > section {
     color: var(--text-color);
 }
 
-.commentInput input {
+.comment-input input {
     background-color: transparent;
     color: var(--text-color);
     border: none;
     padding: 1em;
 }
 
-.commentInput input::placeholder {
+.comment-input input::placeholder {
     color: var(--text-color);
 }
 
-.commentInput label button {
+.comment-input label button {
     background-color: transparent;
     border: none;
 }
 
 
-.commentInput label button svg {
+.comment-input label button svg {
     fill: var(--text-color);
 }
 
-.commentInput > button {
+.comment-input > button {
     display: flex;
     flex-direction: column;
     justify-content: center;
