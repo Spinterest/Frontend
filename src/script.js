@@ -36,10 +36,10 @@ window.handleCredentialResponse = (response) => {
     const crawlerController = new CrawlerController();
     crawlerController.login(responsePayload.email, (data) => {
         if (data!=null){
-            sessionStorage.setItem('crawlerID',data.crawlerID);
-            sessionStorage.setItem('crawlerEmail',data.crawlerEmail);
-            sessionStorage.setItem('crawlerUserName',data.crawlerUserName);
-            sessionStorage.setItem('crawlerToken',responsePayload.jti);
+            localStorage.setItem('crawlerID',data.crawlerID);
+            localStorage.setItem('crawlerEmail',data.crawlerEmail);
+            localStorage.setItem('crawlerUserName',data.crawlerUserName);
+            localStorage.setItem('crawlerToken',responsePayload.jti);
         }
     });
 

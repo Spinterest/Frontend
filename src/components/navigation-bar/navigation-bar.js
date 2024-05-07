@@ -127,10 +127,10 @@ export class NavigationBar extends HTMLElement {
         )
 
         btnSignOut.addEventListener("click", () => {
-            sessionStorage.removeItem("crawlerID");
-            sessionStorage.removeItem("crawlerEmail");
-            sessionStorage.removeItem("crawlerToken");
-            sessionStorage.removeItem("crawlerUserName");
+            localStorage.removeItem("crawlerID");
+            localStorage.removeItem("crawlerEmail");
+            localStorage.removeItem("crawlerToken");
+            localStorage.removeItem("crawlerUserName");
             profile.classList.add("hidden");
             signIn.classList.remove("hidden");
         })
@@ -139,7 +139,7 @@ export class NavigationBar extends HTMLElement {
     populateBar(){
         const profile = document.getElementById("profile");
         const signIn = document.getElementById("sign-in")
-        if (sessionStorage.getItem("crawlerID")==null){
+        if (localStorage.getItem("crawlerID")==null){
             profile.classList.add("hidden");
             signIn.classList.remove("hidden");
         } else {
