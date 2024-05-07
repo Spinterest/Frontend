@@ -132,15 +132,6 @@ export class ComplexController {
             callBack
         );
     };
-
-    getWebCard(webID, callBack){
-        console.log(`${localBaseURL}/${this.baseURL}/web/${webID}`);
-        apiCallBuilder(
-            `${localBaseURL}/${this.baseURL}/web/${webID}`,
-            callTypes.get,
-            callBack
-        );
-    };
 }
 
 export class CrawlerController{
@@ -511,9 +502,13 @@ export const apiCallBuilder = async (
             return;
         }
 
-        const data = await response.json()
-
-        callback(data);
+        try{
+            const data = await response.json();
+            callback(data);
+        }
+        catch {
+            callback(null);
+        }
     })
     .catch(error => {
         console.error('There was a problem with the fetch operation:', error);
