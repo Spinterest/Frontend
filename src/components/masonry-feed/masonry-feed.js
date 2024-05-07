@@ -10,23 +10,57 @@ export class MasonryFeed extends HTMLElement {
         super();
 
         this.upload = this.hasAttribute('upload');
+        this.webView = this.hasAttribute('webView');
+
         this.complexClass = new ComplexController ();
         this.spinClass = new SpinController();
+    }
+
+    handleViews(){
+        document.getElementById("header-section-web-section").classList.add("hidden");
+
+        if (this.webView){
+            document.getElementById("header-section-web-section").classList.remove("hidden");
+
+            const headerTitle = document.getElementById("header-section-title");
+            const headerDescription = document.getElementById("header-section-description");
+
+            headerTitle.classList.add("hidden");
+            headerDescription.classList.add("hidden");
+
+            if (this.web.webTitle != null){
+                headerTitle.textContent = this.web.webTitle;
+                headerTitle.classList.remove("hidden");
+            }
+
+            if (this.web.webDescription != null){
+                headerDescription.textContent = this.web.webDescription;
+                headerDescription.classList.remove("hidden");
+            }
+        }
     }
 
     loadData(){
         // ToDo, properly get crawlerID / crawlerEmail
         const crawlerID = 3;
 
-        if (!this.upload){
-            this.complexClass.likedUserFeed(
+        if (this.upload){
+            this.spinClass.getUserSpinsWithUserID(
                 crawlerID,
                 this.populateFeed.bind(this)
             );
-            return
+            return;
         }
 
-        this.spinClass.getUserSpinsWithUserID(
+        if (this.webView){
+            this.complexClass.getSpinsForWeb(
+                this.web.webID,
+                this.populateFeed.bind(this)
+            );
+            return;
+        }
+
+        this.complexClass.likedUserFeed(
             crawlerID,
             this.populateFeed.bind(this)
         );
@@ -37,6 +71,8 @@ export class MasonryFeed extends HTMLElement {
             .then(response => response.text())
             .then(html => {
                 this.innerHTML = html;
+                this.web = history.state;
+                this.handleViews();
                 this.loadData();
             });
     }
