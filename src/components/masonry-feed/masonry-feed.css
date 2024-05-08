@@ -53,10 +53,91 @@ article button {
     overflow: hidden;
 }
 
+/*
+CSS can really be done better, Kat is no expert here sadly
+ */
+
+.overlay-wrapper{
+    display: grid;
+    grid-template-areas: 'overlay';
+    justify-items: end;
+    align-items: start;
+}
+
+.overlay-element{
+    width: 100%;
+    grid-area: overlay;
+}
+
+.overlay-button{
+    width: 1.5em;
+    height: 1.5em;
+
+    grid-area: overlay;
+    margin: 1em;
+}
+
+.overlay-button-add-tag{
+    justify-self: end;
+    align-self: center;
+}
+
+.overlay-wrapper-tags{
+    justify-items: end;
+    align-items: center;
+
+    grid-template-areas:
+            'overlay'
+            'tags';
+
+    grid-row-gap: 0.75em;
+}
+
+.overlay-wrapper-tag-button{
+    justify-items: end;
+    align-items: center;
+
+    grid-template-areas:'buttons';
+}
+
+.tags-overflow{
+    display: flex;
+    grid-area: tags;
+}
+
+.tag-button{
+    grid-area: buttons;
+    width: fit-content;
+    padding: 0 3.5em 0 1em;
+}
+
+.tag-button-delete{
+    background-color: var(--secondary-bg-color);
+    height: 40%;
+    padding: 0 0.75em;
+    grid-area: buttons;
+    width: fit-content;
+    margin: 0.5em;
+    justify-items: end;
+}
+
 .hidden{
     display: none;
 }
 
 .dropdown {
     grid-area: overlay;
+}
+
+.tag-dropdown {
+    grid-area: overlay;
+    grid-template-areas: 'overlay';
+    display: grid;
+    width: 100%;
+}
+
+.tag-dropdown:hover .dropdown-content {display: block;}
+
+.dropdown-content-tags-lower{
+    transform: translateY(3em);
 }

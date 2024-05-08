@@ -1,9 +1,32 @@
+/*
+TODO
+TAGS DONT OVERFLOW NICELY
+THEY EXTENT THE CREATE SPIN WINDOW
+asdsaasd
+sa
+d
+as
+
+d
+as
+d
+sa
+
+d
+asdasda
+todo
+todo
+todo
+ */
+
+
 import {Router} from "../../js/Router.js";
 import {Toast} from "../../js/Toast.js";
 
 import {
     ComplexController,
-    SpinController,
+    SpinController, 
+    TagController,
     WebSpinsController
 } from "../../js/API.js";
 
@@ -12,12 +35,13 @@ export class MasonryFeed extends HTMLElement {
     constructor() {
         super();
 
-        this.upload = this.hasAttribute('upload');
-        this.webView = this.hasAttribute('webView');
+        this.upload = this.hasAttribute('upload') && !this.hasAttribute('webView');
+        this.webView = this.hasAttribute('webView') && !this.hasAttribute('upload');
 
         this.complexClass = new ComplexController ();
         this.spinClass = new SpinController();
         this.webSpinClass = new WebSpinsController();
+        this.tagClass = new TagController();
 
         // ToDo, properly get crawlerID / crawlerEmail
         this.crawlerID = 3;
@@ -96,8 +120,44 @@ export class MasonryFeed extends HTMLElement {
             });
     }
 
+    populateTagDropDown(tags){
+        if (!tags){
+            tags = [];
+        }
+        else if (!Array.isArray(tags)) {
+            tags = [tags];
+        }
+
+        const tagInput = document.getElementById("inpTag");
+        const btnAddTag = document.getElementById("add-tag-button");
+        const tagContainer = document.getElementById("tag-dropdown-content");
+        while (tagContainer.firstChild){
+            tagContainer.removeChild(tagContainer.firstChild);
+        }
+
+        tags.forEach(tag => {
+            const tagLabel = document.createElement("p");
+            tagLabel.textContent = tag.tagName;
+            tagContainer.appendChild(tagLabel);
+
+            tagLabel.addEventListener('click', () => {
+                tagInput.value = tag.tagName;
+                btnAddTag.click();
+
+                tagInput.focus();
+            });
+        });
+    }
+
     // TODO: Infinity Scroll
     populateFeed(data) {
+        if (!data){
+            data = []
+        }
+        else if (!Array.isArray(data)) {
+            data = [data];
+        }
+
         const article = this.querySelector('article');
 
         if (this.upload) {
@@ -133,18 +193,89 @@ export class MasonryFeed extends HTMLElement {
             document.getElementById('btnClose').addEventListener('click', () => 
             {
                 this.closeModal(modal);
-            })
+            });
 
-            buttonCreate.addEventListener("click", () => 
+            const tagsInput = document.getElementById("inpTag");
+            const tagOverFlow = document.getElementById("tag-overflow-area");
+
+            const addTagButton = document.getElementById("add-tag-button");
+            addTagButton.addEventListener("click",
+                (event) =>{
+                    event.preventDefault();
+
+                    if (tagsInput.value.length === 0){
+                        new Toast(`Enter text to add tag`, 'error');
+                        return
+                    }
+
+                    const existingTagOverflowSection = document.getElementById(`tag-overflow-section-${tagsInput.value.toLowerCase()}`);
+                    if (!existingTagOverflowSection){
+                        const tagOverflowSection = document.createElement("section");
+                        tagOverflowSection.id = `tag-overflow-section-${tagsInput.value.toLowerCase()}`;
+                        tagOverflowSection.classList.add("overlay-wrapper");
+                        tagOverflowSection.classList.add("overlay-wrapper-tag-button");
+
+                        const tagButton = document.createElement("button");
+                        tagButton.classList.add("tag-button");
+                        tagButton.textContent = tagsInput.value.toLowerCase();
+                        tagsInput.value = '';
+                        tagButton.id = 'tag-overflow-section-button';
+
+                        const tagButtonDelete = document.createElement("button");
+                        tagButtonDelete.classList.add("tag-button-delete");
+                        tagButtonDelete.textContent = 'X';
+
+                        tagOverflowSection.appendChild(tagButton);
+                        tagOverflowSection.appendChild(tagButtonDelete);
+                        tagOverFlow.appendChild(tagOverflowSection);
+
+                        tagButtonDelete.addEventListener('click', (event) => {
+                            console.log("clicked");
+                            tagOverFlow.removeChild(tagOverflowSection);
+                        });
+
+                        tagButton.addEventListener('click', (event) =>{
+                            console.log("clocked but button");
+                        })
+                    }
+                    else {
+                        const tagButton = existingTagOverflowSection.querySelector("#tag-overflow-section-button");
+                        new Toast(`You have already added tag: ${tagButton.textContent}`, 'info');
+                    }
+                }
+            );
+
+            tagsInput.addEventListener('focusin', () => {
+                if (tagsInput.value === ''){
+                    this.complexClass.getTopTags(this.populateTagDropDown.bind(this));
+                    return;
+                }
+                this.tagClass.filterTags(tagsInput.value, this.populateTagDropDown.bind(this));
+            });
+
+            tagsInput.addEventListener('input', () => {
+                if (tagsInput.value === ''){
+                    this.complexClass.getTopTags(this.populateTagDropDown.bind(this));
+                    return;
+                }
+                this.tagClass.filterTags(tagsInput.value, this.populateTagDropDown.bind(this));
+            });
+
+            buttonCreate.addEventListener("click", () =>
             {
+                const tagNames = [];
+                for (let index = 0; index < tagOverFlow.children.length; index++) {
+                    const tagOverflowSection = tagOverFlow.children[index];
+                    tagNames.push(tagOverflowSection.querySelector('.tag-button').textContent);
+                }
                 this.closeModal(modal);
-            })
+            });
         }
 
         const router = new Router();
         data.forEach(spin => {
             const imageSection = document.createElement('section');
-            imageSection.setAttribute('class', 'image-wrapper');
+            imageSection.setAttribute('class', 'overlay-wrapper');
 
             const dropDownContainer = document.createElement('div');
             dropDownContainer.setAttribute('class', 'dropdown');
@@ -183,7 +314,7 @@ export class MasonryFeed extends HTMLElement {
             }
 
             const imageButton = document.createElement('button');
-            imageButton.setAttribute('class', 'image-button');
+            imageButton.setAttribute('class', 'overlay-button');
             imageButton.classList.add('hidden');
             imageButton.textContent = "X";
 
@@ -210,7 +341,7 @@ export class MasonryFeed extends HTMLElement {
             imageSection.appendChild(dropDownContainer);
 
             article.appendChild(imageSection);
-        })
+        });
     }
 
     closeModal(modal) {
@@ -221,6 +352,11 @@ export class MasonryFeed extends HTMLElement {
         const uploadIcon = document.getElementById("upload-icon");
         const imageLabel = document.getElementById("lblImg");
         const imageSpan = document.getElementById("spnImg");
+        const tagOverFlow = document.getElementById("tag-overflow-area");
+
+        while (tagOverFlow.firstChild) {
+            tagOverFlow.removeChild(tagOverFlow.firstChild);
+        }
 
         titleInput.value="";
         descriptionTextArea.value="";
@@ -233,6 +369,4 @@ export class MasonryFeed extends HTMLElement {
 
         modal.close();
     }
-
-
 }

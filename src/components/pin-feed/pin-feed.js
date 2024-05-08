@@ -104,7 +104,10 @@ export class PinFeed extends HTMLElement {
     populateComments(comments) {
         const commentOutput = this.querySelector('.comment-output');
 
-        if (!Array.isArray(comments)){
+        if (!comments){
+            comments = [];
+        }
+        else if (!Array.isArray(comments)){
             comments = [comments];
         }
 

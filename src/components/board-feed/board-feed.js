@@ -54,7 +54,6 @@ export class BoardFeed extends HTMLElement {
                 descriptionTextArea.value,
                 titleInput.value,
                 (data) => {
-                    // Todo, maybe add red glow on button for error
                     // The update didnt happen
                     if (!data || data.hasOwnProperty('error')){
                         labelCreateWebError.style.display = 'inherit';
@@ -67,7 +66,6 @@ export class BoardFeed extends HTMLElement {
                         return;
                     }
 
-                    // Todo, maybe add a successful animation
                     closePopup();
                     this.getData();
                 }
@@ -87,35 +85,29 @@ export class BoardFeed extends HTMLElement {
         document.getElementById("header-section-web-section").classList.add("hidden");
         const feed = document.getElementById("card-feed");
 
-
-        try {
-            webs.forEach(web => {
-                const existingBoardCard = document.getElementById(`$board-card-${web.webID}`);
-                if (!existingBoardCard) {
-                    const boardCard = document.createElement('board-card');
-                    boardCard.id = `$board-card-${web.webID}`;
-                    boardCard.webID = web.webID;
-                    boardCard.webTitle = web.webTitle;
-                    boardCard.webDescription = web.webDescription;
-
-                    boardCard.addEventListener('click',
-                        (event) =>{
-                            const router = new Router();
-                            router.handleNavigation('/boards-view', web);
-                        }
-                    );
-
-                    feed.appendChild(boardCard);
-                }
-            });
-        } catch (error) {
-            const boardCard = document.createElement('board-card');
-            boardCard.webID = webs.webID;
-            boardCard.webDescription = webs.webDescription;
-            boardCard.webTitle = webs.webTitle;
-
-            feed.appendChild(boardCard); 
+        if (!webs){
+            webs = []
         }
-        
+        else if (!Array.isArray(webs)){
+            webs = [webs];
+        }
+
+        webs.forEach(web => {
+            const existingBoardCard = document.getElementById(`$board-card-${web.webID}`);
+            if (!existingBoardCard) {
+                const boardCard = document.createElement('board-card');
+                boardCard.id = `$board-card-${web.webID}`;
+                boardCard.webID = web.webID;
+                boardCard.webTitle = web.webTitle;
+                boardCard.webDescription = web.webDescription;
+
+                boardCard.addEventListener('click', (event) => {
+                    const router = new Router();
+                    router.handleNavigation('/boards-view', web);
+                });
+
+                feed.appendChild(boardCard);
+            }
+        });
     }
 }

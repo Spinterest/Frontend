@@ -15,7 +15,15 @@
             <br>
             <textarea name="description" id="txtDesc" class="formTextArea" placeholder="Description"></textarea>
             <br>
-            <input type="text" placeholder="Tags" id="inpTag" class="formInput">
+            <article class="overlay-wrapper overlay-wrapper-tags">
+                <div class="tag-dropdown">
+                    <input type="text" placeholder="Tags" id="inpTag" class="formInput overlay-element">
+                    <button class="overlay-button overlay-button-add-tag" id="add-tag-button">X</button>
+                    <div class="dropdown-content dropdown-content-tags-lower" id="tag-dropdown-content">
+                    </div>
+                </div>
+                <article class="tags-overflow" id="tag-overflow-area"></article>
+            </article>
             <br>
             <label class="formInput" id="lblImg">
                 <input type="file" accept="Image/*" id="inpImg" required/>
