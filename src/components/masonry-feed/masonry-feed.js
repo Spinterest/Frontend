@@ -1,7 +1,10 @@
 import {Router} from "../../js/Router.js";
+import {Toast} from "../../js/Toast.js";
+
 import {
     ComplexController,
-    SpinController
+    SpinController,
+    WebSpinsController
 } from "../../js/api.js";
 
 export class MasonryFeed extends HTMLElement {
@@ -14,6 +17,10 @@ export class MasonryFeed extends HTMLElement {
 
         this.complexClass = new ComplexController ();
         this.spinClass = new SpinController();
+        this.webSpinClass = new WebSpinsController();
+
+        // ToDo, properly get crawlerID / crawlerEmail
+        this.crawlerID = 3;
     }
 
     handleViews(){
@@ -40,13 +47,21 @@ export class MasonryFeed extends HTMLElement {
         }
     }
 
-    loadData(){
-        // ToDo, properly get crawlerID / crawlerEmail
-        const crawlerID = 3;
+    loadProfileWebs(){
+        this.complexClass.getWebsForCrawler(
+            this.crawlerID,
+            this.loadData.bind(this)
+        )
+    }
+
+    loadData(profileWebs){
+        if (profileWebs != null){
+            this.profileWebTitles = profileWebs;
+        }
 
         if (this.upload){
             this.spinClass.getUserSpinsWithUserID(
-                crawlerID,
+                this.crawlerID,
                 this.populateFeed.bind(this)
             );
             return;
@@ -61,7 +76,7 @@ export class MasonryFeed extends HTMLElement {
         }
 
         this.complexClass.likedUserFeed(
-            crawlerID,
+            this.crawlerID,
             this.populateFeed.bind(this)
         );
     }
@@ -73,7 +88,7 @@ export class MasonryFeed extends HTMLElement {
                 this.innerHTML = html;
                 this.web = history.state;
                 this.handleViews();
-                this.loadData();
+                this.loadProfileWebs();
             });
     }
 
@@ -124,15 +139,73 @@ export class MasonryFeed extends HTMLElement {
 
         const router = new Router();
         data.forEach(spin => {
-            const img = document.createElement('img')
-            img.src = spin.spinLink;
-            img.alt = spin.spinDescription
+            const imageSection = document.createElement('section');
+            imageSection.setAttribute('class', 'image-wrapper');
 
-            article.appendChild(img);
+            const dropDownContainer = document.createElement('div');
+            dropDownContainer.setAttribute('class', 'dropdown');
 
-            img.addEventListener('click', (e) => {
+            const dropDownContentContainer = document.createElement('div');
+            dropDownContentContainer.setAttribute('class', 'dropdown-content');
+
+            if (this.profileWebTitles){
+                this.profileWebTitles.forEach(web => {
+                   const item = document.createElement('p');
+                   item.textContent = web.webTitle || `Web-${web.webID}`;
+                   dropDownContentContainer.appendChild(item);
+
+                   item.addEventListener('click', () => {
+                       this.webSpinClass.addSpinToWeb(
+                           web.webID,
+                           spin.spinID,
+                           (data) => {
+                               if (!data || data.hasOwnProperty('error')){
+                                   new Toast(
+                                       `There was an error adding that Spin to ${item.textContent}. Please try again later`,
+                                       'error'
+                                   );
+                                   return;
+                               }
+                               if (data.hasOwnProperty('alert')) {
+                                   new Toast(`Spin already existed in ${item.textContent}`, 'warning');
+                                   return;
+                               }
+
+                               new Toast(`Successfully added spin to ${item.textContent}`, 'success');
+                           }
+                       )
+                   });
+                });
+            }
+
+            const imageButton = document.createElement('button');
+            imageButton.setAttribute('class', 'image-button');
+            imageButton.classList.add('hidden');
+            imageButton.textContent = "X";
+
+            const image = document.createElement('img')
+            image.src = spin.spinLink;
+            image.alt = spin.spinDescription;
+
+            image.addEventListener('click', (event) => {
                 router.handleNavigation('/pin', spin);
-            })
+            });
+
+            imageSection.addEventListener('mouseover', (event) => {
+                imageButton.classList.remove("hidden");
+            });
+
+            imageSection.addEventListener('mouseleave', (event) => {
+                imageButton.classList.add("hidden");
+            });
+
+            dropDownContainer.appendChild(imageButton);
+            dropDownContainer.appendChild(dropDownContentContainer);
+
+            imageSection.appendChild(image);
+            imageSection.appendChild(dropDownContainer);
+
+            article.appendChild(imageSection);
         })
     }
 
