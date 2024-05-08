@@ -25,7 +25,7 @@ import {Toast} from "../../js/Toast.js";
 
 import {
     ComplexController,
-    SpinController, 
+    SpinController,
     TagController,
     WebSpinsController
 } from "../../js/API.js";
@@ -38,75 +38,12 @@ export class MasonryFeed extends HTMLElement {
         this.upload = this.hasAttribute('upload') && !this.hasAttribute('webView');
         this.webView = this.hasAttribute('webView') && !this.hasAttribute('upload');
 
-        this.complexClass = new ComplexController ();
+        this.complexClass = new ComplexController();
         this.spinClass = new SpinController();
         this.webSpinClass = new WebSpinsController();
         this.tagClass = new TagController();
 
-        // ToDo, properly get crawlerID / crawlerEmail
-        this.crawlerID = 3;
-    }
-
-    handleViews(){
-        document.getElementById("header-section-web-section").classList.add("hidden");
-
-        if (this.webView){
-            document.getElementById("header-section-web-section").classList.remove("hidden");
-
-            const headerTitle = document.getElementById("header-section-title");
-            const headerDescription = document.getElementById("header-section-description");
-
-            headerTitle.classList.add("hidden");
-            headerDescription.classList.add("hidden");
-
-            if (this.web.webTitle != null){
-                headerTitle.textContent = this.web.webTitle;
-                headerTitle.classList.remove("hidden");
-            }
-
-            if (this.web.webDescription != null){
-                headerDescription.textContent = this.web.webDescription;
-                headerDescription.classList.remove("hidden");
-            }
-        }
-    }
-
-    loadProfileWebs(){
-        this.complexClass.getWebsForCrawler(
-            this.crawlerID,
-            this.loadData.bind(this)
-        )
-    }
-
-    loadData(profileWebs){
-        console.log(localStorage.getItem('crawlerID'));
-        console.log(localStorage.getItem('crawlerEmail'));
-        console.log(localStorage.getItem('crawlerToken'));
-
-        if (profileWebs != null){
-            this.profileWebTitles = profileWebs;
-        }
-
-        if (this.upload){
-            this.spinClass.getUserSpinsWithUserID(
-                this.crawlerID,
-                this.populateFeed.bind(this)
-            );
-            return;
-        }
-
-        if (this.webView){
-            this.complexClass.getSpinsForWeb(
-                this.web.webID,
-                this.populateFeed.bind(this)
-            );
-            return;
-        }
-
-        this.complexClass.likedUserFeed(
-            this.crawlerID,
-            this.populateFeed.bind(this)
-        );
+        this.crawlerID = localStorage.getItem("crawlerID")
     }
 
     connectedCallback() {
@@ -120,6 +57,70 @@ export class MasonryFeed extends HTMLElement {
             });
     }
 
+    handleViews() {
+        document.getElementById("header-section-web-section").classList.add("hidden");
+
+        if (this.webView) {
+            document.getElementById("header-section-web-section").classList.remove("hidden");
+
+            const headerTitle = document.getElementById("header-section-title");
+            const headerDescription = document.getElementById("header-section-description");
+
+            headerTitle.classList.add("hidden");
+            headerDescription.classList.add("hidden");
+
+            if (this.web.webTitle != null) {
+                headerTitle.textContent = this.web.webTitle;
+                headerTitle.classList.remove("hidden");
+            }
+
+            if (this.web.webDescription != null) {
+                headerDescription.textContent = this.web.webDescription;
+                headerDescription.classList.remove("hidden");
+            }
+        }
+    }
+
+    loadProfileWebs() {
+        this.complexClass.getWebsForCrawler(
+            this.crawlerID,
+            this.loadData.bind(this)
+        )
+    }
+
+    loadData(profileWebs) {
+
+        if (profileWebs != null) {
+            this.profileWebTitles = profileWebs;
+        }
+
+        if (this.upload) {
+            if (this.crawlerID) {
+                this.spinClass.getUserSpinsWithUserID(
+                    this.crawlerID,
+                    this.populateFeed.bind(this)
+                );
+                return;
+            }
+            new Toast('Error Loading Page - My Spins: User does not seem to be logged In.', 'error');
+            return;
+        }
+
+        if (this.webView) {
+            this.complexClass.getSpinsForWeb(
+                this.web.webID,
+                this.populateFeed.bind(this)
+            );
+            return;
+        }
+
+        this.complexClass.likedUserFeed(
+            this.crawlerID,
+            this.populateFeed.bind(this)
+        );
+    }
+
+
     getExistingTags(){
         const tagOverFlow = document.getElementById("tag-overflow-area");
         const tagNames = [];
@@ -130,21 +131,22 @@ export class MasonryFeed extends HTMLElement {
         return tagNames;
     }
 
-    populateTagDropDown(tags){
-        if (!tags){
+    populateTagDropDown(tags) {
+        if (!tags) {
             tags = [];
         }
-        else if (!Array.isArray(tags)) {
+
+        if (!Array.isArray(tags)) {
             tags = [tags];
         }
 
-        const tagInput = document.getElementById("inpTag");
-        const btnAddTag = document.getElementById("add-tag-button");
         const tagContainer = document.getElementById("tag-dropdown-content");
-        while (tagContainer.firstChild){
+        while (tagContainer.firstChild) {
             tagContainer.removeChild(tagContainer.firstChild);
         }
 
+        const btnAddTag = document.getElementById("add-tag-button");
+        const tagInput = document.getElementById("inpTag");
         tags.forEach(tag => {
             const tagLabel = document.createElement("p");
             tagLabel.textContent = tag.tagName;
@@ -161,10 +163,11 @@ export class MasonryFeed extends HTMLElement {
 
     // TODO: Infinity Scroll
     populateFeed(data) {
-        if (!data){
+        if (!data) {
             data = []
         }
-        else if (!Array.isArray(data)) {
+
+        if (!Array.isArray(data)) {
             data = [data];
         }
 
@@ -199,9 +202,8 @@ export class MasonryFeed extends HTMLElement {
                 imageSpan.classList.add("filled");
                 uploadIcon.classList.add("filled");
             };
-    
-            document.getElementById('btnClose').addEventListener('click', () => 
-            {
+
+            document.getElementById('btnClose').addEventListener('click', () => {
                 this.closeModal(modal);
             });
 
@@ -210,16 +212,16 @@ export class MasonryFeed extends HTMLElement {
 
             const addTagButton = document.getElementById("add-tag-button");
             addTagButton.addEventListener("click",
-                (event) =>{
+                (event) => {
                     event.preventDefault();
 
-                    if (tagsInput.value.length === 0){
+                    if (tagsInput.value.length === 0) {
                         new Toast(`Enter text to add tag`, 'error');
                         return
                     }
 
                     const existingTagOverflowSection = document.getElementById(`tag-overflow-section-${tagsInput.value.toLowerCase()}`);
-                    if (!existingTagOverflowSection){
+                    if (!existingTagOverflowSection) {
                         const tagOverflowSection = document.createElement("section");
                         tagOverflowSection.id = `tag-overflow-section-${tagsInput.value.toLowerCase()}`;
                         tagOverflowSection.classList.add("overlay-wrapper");
@@ -243,12 +245,11 @@ export class MasonryFeed extends HTMLElement {
                             tagOverFlow.removeChild(tagOverflowSection);
                         });
 
-                        tagButton.addEventListener('click', (event) =>{
+                        tagButton.addEventListener('click', (event) => {
                             event.preventDefault();
                             event.stopPropagation();
                         })
-                    }
-                    else {
+                    } else {
                         const tagButton = existingTagOverflowSection.querySelector("#tag-overflow-section-button");
                         new Toast(`You have already added tag: ${tagButton.textContent}`, 'info');
                     }
@@ -256,7 +257,7 @@ export class MasonryFeed extends HTMLElement {
             );
 
             tagsInput.addEventListener('focusin', () => {
-                if (tagsInput.value === ''){
+                if (tagsInput.value === '') {
                     this.complexClass.getTopTags(
                         this.populateTagDropDown.bind(this),
                         this.getExistingTags()
@@ -271,7 +272,7 @@ export class MasonryFeed extends HTMLElement {
             });
 
             tagsInput.addEventListener('input', () => {
-                if (tagsInput.value === ''){
+                if (tagsInput.value === '') {
                     this.complexClass.getTopTags(
                         this.populateTagDropDown.bind(this),
                         this.getExistingTags()
@@ -285,8 +286,7 @@ export class MasonryFeed extends HTMLElement {
                 );
             });
 
-            buttonCreate.addEventListener("click", () =>
-            {
+            buttonCreate.addEventListener("click", () => {
                 const tagNames = this.getExistingTags();
                 this.closeModal(modal);
             });
@@ -303,33 +303,33 @@ export class MasonryFeed extends HTMLElement {
             const dropDownContentContainer = document.createElement('div');
             dropDownContentContainer.setAttribute('class', 'dropdown-content');
 
-            if (this.profileWebTitles){
+            if (this.profileWebTitles) {
                 this.profileWebTitles.forEach(web => {
-                   const item = document.createElement('p');
-                   item.textContent = web.webTitle || `Web-${web.webID}`;
-                   dropDownContentContainer.appendChild(item);
+                    const item = document.createElement('p');
+                    item.textContent = web.webTitle || `Web-${web.webID}`;
+                    dropDownContentContainer.appendChild(item);
 
-                   item.addEventListener('click', () => {
-                       this.webSpinClass.addSpinToWeb(
-                           web.webID,
-                           spin.spinID,
-                           (data) => {
-                               if (!data || data.hasOwnProperty('error')){
-                                   new Toast(
-                                       `There was an error adding that Spin to ${item.textContent}. Please try again later`,
-                                       'error'
-                                   );
-                                   return;
-                               }
-                               if (data.hasOwnProperty('alert')) {
-                                   new Toast(`Spin already existed in ${item.textContent}`, 'info');
-                                   return;
-                               }
+                    item.addEventListener('click', () => {
+                        this.webSpinClass.addSpinToWeb(
+                            web.webID,
+                            spin.spinID,
+                            (data) => {
+                                if (!data || data.hasOwnProperty('error')) {
+                                    new Toast(
+                                        `There was an error adding that Spin to ${item.textContent}. Please try again later`,
+                                        'error'
+                                    );
+                                    return;
+                                }
+                                if (data.hasOwnProperty('alert')) {
+                                    new Toast(`Spin already existed in ${item.textContent}`, 'info');
+                                    return;
+                                }
 
-                               new Toast(`Successfully added spin to ${item.textContent}`, 'success');
-                           }
-                       )
-                   });
+                                new Toast(`Successfully added spin to ${item.textContent}`, 'success');
+                            }
+                        )
+                    });
                 });
             }
 
@@ -378,10 +378,10 @@ export class MasonryFeed extends HTMLElement {
             tagOverFlow.removeChild(tagOverFlow.firstChild);
         }
 
-        titleInput.value="";
-        descriptionTextArea.value="";
-        tagsInput.value="";
-        imageInput.value="";
+        titleInput.value = "";
+        descriptionTextArea.value = "";
+        tagsInput.value = "";
+        imageInput.value = "";
         imageLabel.classList.remove("filled");
         imageSpan.classList.remove("filled");
         uploadIcon.classList.remove("filled");

@@ -1,12 +1,10 @@
-import{ComplexController} from "../../js/API.js";
+import {ComplexController} from "../../js/API.js";
 
 export class BoardCard extends HTMLElement {
 
     constructor() {
         super();
-        // This came from the element that created you
-        // this.webID = 0;
-        this.complexClass = new ComplexController ();
+        this.complexClass = new ComplexController();
     }
 
     connectedCallback() {
@@ -23,8 +21,8 @@ export class BoardCard extends HTMLElement {
         this[property] = newValue;
     }
 
-    getData(){
-        if (this.webID != null){
+    getData() {
+        if (this.webID != null) {
             this.complexClass.getLimitedSpinsForWeb(
                 this.webID,
                 this.populateCard.bind(this)

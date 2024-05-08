@@ -65,7 +65,6 @@ export class NavigationBar extends HTMLElement {
                 btnHome.classList.remove('active');
                 btnPin.classList.add('active');
                 btnBoard.classList.remove('active');
-                console.log(Login.userEmail)
             }
         );
 

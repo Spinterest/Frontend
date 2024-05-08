@@ -19,25 +19,33 @@ export class PinFeed extends HTMLElement {
         this.spinCommentController = new SpinCommentController();
         this.spinLikesController = new SpinLikesController();
         this.commentLikesController = new CommentLikesController();
+
+        this.crawlerID = localStorage.getItem("crawlerID")
     }
 
     connectedCallback() {
         fetch('components/pin-feed/pin-feed.html')
             .then(response => response.text())
             .then(html => {
-                this.innerHTML = html;
-                this.pin = history.state;
-                this.loadData();
-                this.addCommentEventListener();
-                this.likeSpinEventListener()
-            });
+                if (this.crawlerID) {
+                    this.innerHTML = html;
+                    this.pin = history.state;
+                    this.loadData();
+                    this.addCommentEventListener();
+                    this.likeSpinEventListener()
+                    return;
+                }
 
+                new Toast('Error Loading Page - Pin: User does not seem to be logged In.', 'error');
+            });
     }
 
     loadData() {
+
         document.getElementById("header-section-web-section").classList.add("hidden");
 
         this.populateImage(this.pin);
+
         this.spinController.getSpinWithID(this.pin.spinID, this.populateSpinDetails.bind(this))
 
         this.complexController.getCommentsForSpin(this.pin.spinID, this.populateComments.bind(this))
@@ -51,7 +59,7 @@ export class PinFeed extends HTMLElement {
             return;
         }
 
-        if (!Array.isArray(data)){
+        if (!Array.isArray(data)) {
             data = [data];
         }
 
@@ -59,8 +67,7 @@ export class PinFeed extends HTMLElement {
         span.textContent = data.length
 
         // see if the current user liked the image:
-        const loggedInUser = 3;
-        if (data.find(crawler => crawler.crawlerID === loggedInUser)) {
+        if (data.find(crawler => crawler.crawlerID === this.crawlerID)) {
             const likeButton = this.querySelector('.like-image-button');
             likeButton.classList.add('active-like');
         }
@@ -104,27 +111,27 @@ export class PinFeed extends HTMLElement {
     populateComments(comments) {
         const commentOutput = this.querySelector('.comment-output');
 
-        if (!comments){
+        if (!comments) {
             comments = [];
         }
-        else if (!Array.isArray(comments)){
+
+        if (!Array.isArray(comments)) {
             comments = [comments];
         }
 
         comments
             .map(comment => this.createComment(comment))
             .forEach(section => {
-                if (section){
-                    commentOutput.appendChild(section);
+                    if (section) {
+                        commentOutput.appendChild(section);
+                    }
                 }
-            }
-        );
+            );
 
         this.styleCommentsToFitImage();
 
         // add the likes to each comment
-        const loggedInUser = 3
-        this.complexController.getCommentsLikedByCrawlerID(loggedInUser, this.populateCommentLikes.bind(this))
+        this.complexController.getCommentsLikedByCrawlerID(this.crawlerID, this.populateCommentLikes.bind(this))
     }
 
     populateCommentLikes(data) {
@@ -141,7 +148,6 @@ export class PinFeed extends HTMLElement {
             .filter(spinComment => spinComment.spinID === this.pin.spinID)
             .forEach(spinComment => {
                 const likedCommentButton = this.querySelector(`#comment-${spinComment.spinCommentID}`)
-
                 likedCommentButton.classList.add('active-like');
             })
     }
@@ -159,10 +165,9 @@ export class PinFeed extends HTMLElement {
             }
 
             // call api, create comment
-            const loggedInUser = 3
             this.spinCommentController.makeCommentToSpin(
                 this.pin.spinID,
-                loggedInUser,
+                this.crawlerID,
                 input.value,
                 this.addComment.bind(this));
         });
@@ -181,12 +186,11 @@ export class PinFeed extends HTMLElement {
         input.value = '';
 
         this.complexController.getCommentsForSpin(this.pin.spinID, this.populateComments.bind(this));
-        return;
     }
 
     styleCommentsToFitImage() {
         const imageHeight = this.querySelector('article > img').offsetHeight - 150;
-        const commentsElement= this.querySelector('.comments');
+        const commentsElement = this.querySelector('.comments');
 
         const adjustedHeight = Math.max(imageHeight, 600);
 
@@ -195,6 +199,7 @@ export class PinFeed extends HTMLElement {
 
     createComment(comment) {
         const existingCommentSection = document.getElementById(`comment-section-${comment.spinCommentID}`);
+
         if (existingCommentSection) {
             return null;
         }
@@ -231,12 +236,10 @@ export class PinFeed extends HTMLElement {
         section.appendChild(p);
         section.appendChild(button);
 
-
         return section;
     }
 
     handleCommentLikeButtonClick(comment, event) {
-        const loggedInUser = 3;
 
         const idParts = event.id.split('-');
         const spinCommentID = parseInt(idParts[idParts.length - 1]);
@@ -245,15 +248,15 @@ export class PinFeed extends HTMLElement {
         if (event.classList.contains('active-like')) {
             // remove
             this.commentLikesController.removeLikeFromComment(
-                loggedInUser,
+                this.crawlerID,
                 spinCommentID,
                 (data) => {
-                    if (!data || data.hasOwnProperty('error')){
+                    if (!data || data.hasOwnProperty('error')) {
                         new Toast('There was an error trying to unlike this comment. Please try again later.', 'error');
                         return;
                     }
 
-                    if (data.hasOwnProperty('alert')){
+                    if (data.hasOwnProperty('alert')) {
                         new Toast('This comment was already unliked.', 'info');
                         return;
                     }
@@ -263,22 +266,22 @@ export class PinFeed extends HTMLElement {
 
                     const commentCountSpan = document.getElementById(`comment-like-count-${comment.spinCommentID}`);
                     commentCountSpan.textContent = `${Number(commentCountSpan.textContent) - 1}`;
-               }
+                }
             )
             return;
         }
 
         // like
         this.commentLikesController.likeComment(
-            loggedInUser,
+            this.crawlerID,
             spinCommentID,
             (data) => {
-                if (!data || data.hasOwnProperty('error')){
+                if (!data || data.hasOwnProperty('error')) {
                     new Toast('There was an error trying to like this comment. Please try again later.', 'error');
                     return;
                 }
 
-                if (data.hasOwnProperty('alert')){
+                if (data.hasOwnProperty('alert')) {
                     new Toast('This comment was already like.', 'info');
                     return;
                 }
@@ -299,20 +302,19 @@ export class PinFeed extends HTMLElement {
 
     handleLikeButtonClick() {
         const likeButton = this.querySelector('.like-image-button');
-        const loggedInUser = 3;
 
         // unlike
         if (likeButton.classList.contains('active-like')) {
             this.spinLikesController.removeLikeFromSpin(
                 this.pin.spinID,
-                loggedInUser,
+                this.crawlerID,
                 (data) => {
-                    if (!data || data.hasOwnProperty('error')){
+                    if (!data || data.hasOwnProperty('error')) {
                         new Toast('There was an error trying to unlike this spin. Please try again later.', 'error');
                         return;
                     }
 
-                    if (data.hasOwnProperty('alert')){
+                    if (data.hasOwnProperty('alert')) {
                         new Toast('This spin was already unliked.', 'info');
                         return;
                     }
@@ -330,14 +332,14 @@ export class PinFeed extends HTMLElement {
         // like
         this.spinLikesController.likeSpin(
             this.pin.spinID,
-            loggedInUser,
+            this.crawlerID,
             (data) => {
-                if (!data || data.hasOwnProperty('error')){
+                if (!data || data.hasOwnProperty('error')) {
                     new Toast('There was an error trying to like this spin. Please try again later.', 'error');
                     return;
                 }
 
-                if (data.hasOwnProperty('alert')){
+                if (data.hasOwnProperty('alert')) {
                     new Toast('This spin was already like.', 'info');
                     return;
                 }

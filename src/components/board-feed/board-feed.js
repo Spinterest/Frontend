@@ -1,23 +1,27 @@
-import {WebController, WebSpinsController} from "../../js/API.js";
+import {WebController} from "../../js/API.js";
 import {Router} from "../../js/Router.js";
+import {Toast} from "../../js/Toast.js";
 
 export class BoardFeed extends HTMLElement {
 
     constructor() {
         super();
-        this.webClass = new WebController ();
-
-        //Todo, get a proper crawlerID
-        this.crawlerID = 3;
+        this.webClass = new WebController();
+        this.crawlerID = localStorage.getItem("crawlerID")
     }
 
     connectedCallback() {
         fetch('components/board-feed/board-feed.html')
             .then(response => response.text())
-            .then(html => {            
-                this.innerHTML = html;
-                this.addButtonEvents();
-                this.getData();
+            .then(html => {
+                if (this.crawlerID) {
+                    this.innerHTML = html;
+                    this.addButtonEvents();
+                    this.getData();
+                    return;
+                }
+
+                new Toast('Error Loading Page - Boards: User does not seem to be logged In.', 'error');
             });
     }
 
@@ -27,26 +31,34 @@ export class BoardFeed extends HTMLElement {
     }
 
     addButtonEvents() {
-        const showCreateBoardButton = document.getElementById('create-card');
+
         const createBoardPopup = document.getElementById('create-board');
-        const createBoardButton = document.getElementById('btnCreate');
         const titleInput = document.getElementById("inpBoardTitle");
         const descriptionTextArea = document.getElementById("txtBoardDesc");
         const labelCreateWebError = document.getElementById("labelCreateWebError");
         labelCreateWebError.style.display = 'none';
 
-        function closePopup(){
+        function closePopup() {
             createBoardPopup.close();
-            titleInput.value="";
-            descriptionTextArea.value="";
+            titleInput.value = "";
+            descriptionTextArea.value = "";
             labelCreateWebError.style.display = 'none';
         }
 
-        showCreateBoardButton.addEventListener('click', () => {createBoardPopup.showModal();});
-        createBoardButton.addEventListener('click', (event) =>
-        {
-            // Todo, give real crawler
+        const showCreateBoardButton = document.getElementById('create-card');
+        showCreateBoardButton.addEventListener('click', () => {
+            createBoardPopup.showModal();
+        });
+
+        const createBoardButton = document.getElementById('btnCreate');
+        createBoardButton.addEventListener('click', (event) => {
             event.preventDefault();
+
+            // validation
+            if (titleInput.value === '') {
+                new Toast('Title cannot be empty.','error')
+                return;
+            }
 
             const webController = new WebController();
             webController.createWeb(
@@ -55,12 +67,12 @@ export class BoardFeed extends HTMLElement {
                 titleInput.value,
                 (data) => {
                     // The update didnt happen
-                    if (!data || data.hasOwnProperty('error')){
+                    if (!data || data.hasOwnProperty('error')) {
                         labelCreateWebError.style.display = 'inherit';
                         return;
                     }
 
-                    if (data.hasOwnProperty('alert')){
+                    if (data.hasOwnProperty('alert')) {
                         labelCreateWebError.textContent = data.alert;
                         labelCreateWebError.style.display = 'inherit';
                         return;
@@ -71,10 +83,15 @@ export class BoardFeed extends HTMLElement {
                 }
             )
         });
-        document.getElementById('btnClose').addEventListener('click', () => {closePopup();});
+
+        document
+            .getElementById('btnClose')
+            .addEventListener('click', () => {
+                closePopup();
+            });
     }
 
-    getData(){
+    getData() {
         this.webClass.getUserWebsWithUserID(
             this.crawlerID,
             this.populateFeed.bind(this)
@@ -85,10 +102,9 @@ export class BoardFeed extends HTMLElement {
         document.getElementById("header-section-web-section").classList.add("hidden");
         const feed = document.getElementById("card-feed");
 
-        if (!webs){
+        if (!webs) {
             webs = []
-        }
-        else if (!Array.isArray(webs)){
+        } else if (!Array.isArray(webs)) {
             webs = [webs];
         }
 
