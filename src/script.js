@@ -40,6 +40,8 @@ window.handleCredentialResponse = (response) => {
             localStorage.setItem('crawlerEmail',data.crawlerEmail);
             localStorage.setItem('crawlerUserName',data.crawlerUserName);
             localStorage.setItem('crawlerToken',responsePayload.jti);
+
+            router.handleNavigation('/');
         }
     });
 
