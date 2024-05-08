@@ -33,6 +33,10 @@ export class BoardCard extends HTMLElement {
     }
 
     populateCard(data) {
+        if (!data || !Array.isArray(data)) {
+            data = [data];
+        }
+
         const boardCardContainer = this.querySelector('#board-card-container');
         const boardCardImageContainer = this.querySelector('#board-card-image-container');
 
