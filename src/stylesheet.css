@@ -124,6 +124,7 @@ label span {
 
 .hidden {
     visibility: hidden;
+    display: none;
 }
 
 @media only screen and (orientation: portrait) {
