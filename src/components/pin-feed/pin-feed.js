@@ -7,6 +7,7 @@ import {
     SpinLikesController
 } from "../../js/API.js";
 import {Toast} from "../../js/Toast.js";
+import {Router} from "../../js/Router.js";
 
 export class PinFeed extends HTMLElement {
 
@@ -37,6 +38,7 @@ export class PinFeed extends HTMLElement {
                 }
 
                 new Toast('Error Loading Page - Pin: User does not seem to be logged In.', 'error');
+                new Router().handleNavigation('/');
             });
     }
 
@@ -54,7 +56,11 @@ export class PinFeed extends HTMLElement {
     }
 
     populateLikeButton(data) {
-        if (!data || data.hasOwnProperty('error')) {
+        if (!data) {
+            return
+        }
+
+        if (data.hasOwnProperty('error')) {
             new Toast('Could not load the likes for the spin.', 'error');
             return;
         }
@@ -85,17 +91,18 @@ export class PinFeed extends HTMLElement {
 
         if (!spin.spinTitle) {
             this.querySelector('.image-title').remove();
+        } else {
+            const imageTitle = this.querySelector('.image-title');
+            imageTitle.textContent = spin.spinTitle;
         }
 
         if (!spin.spinDescription) {
             this.querySelector('.image-description').remove();
+        } else {
+            const imageDescription = this.querySelector('.image-description');
+            imageDescription.textContent = spin.spinDescription;
         }
 
-        const imageTitle = this.querySelector('.image-title');
-        imageTitle.textContent = spin.spinTitle;
-
-        const imageDescription = this.querySelector('.image-description');
-        imageDescription.textContent = spin.spinDescription;
     }
 
     populateUsername(crawler) {
@@ -112,7 +119,7 @@ export class PinFeed extends HTMLElement {
         const commentOutput = this.querySelector('.comment-output');
 
         if (!comments) {
-            comments = [];
+            return;
         }
 
         if (!Array.isArray(comments)) {

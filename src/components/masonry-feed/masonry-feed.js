@@ -103,6 +103,7 @@ export class MasonryFeed extends HTMLElement {
                 return;
             }
             new Toast('Error Loading Page - My Spins: User does not seem to be logged In.', 'error');
+            new Router().handleNavigation('/');
             return;
         }
 
@@ -304,6 +305,11 @@ export class MasonryFeed extends HTMLElement {
             dropDownContentContainer.setAttribute('class', 'dropdown-content');
 
             if (this.profileWebTitles) {
+
+                if (!Array.isArray(this.profileWebTitles)) {
+                    this.profileWebTitles = [this.profileWebTitles];
+                }
+
                 this.profileWebTitles.forEach(web => {
                     const item = document.createElement('p');
                     item.textContent = web.webTitle || `Web-${web.webID}`;
