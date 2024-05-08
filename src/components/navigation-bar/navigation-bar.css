@@ -86,6 +86,7 @@ nav h1 {
     margin: 0;
     display: inline-block;
     vertical-align: middle;
+    cursor: pointer;
 }
 
 
@@ -111,3 +112,41 @@ nav h1 {
 .dropdown-content p:hover {background-color: var(--secondary-bg-color);}
 
 .dropdown:hover .dropdown-content {display: block;}
+
+@media screen and (max-width: 760px) {
+    nav ul {
+        height: 5em;
+    }
+    nav span {
+        display: none;
+    }
+
+    li:has(#imgSpider) {
+        order: 1;
+    }
+
+    #imgSpider {
+        display: none;
+    }
+
+    li:has(#btnHome) {
+        display: none;
+    }
+
+
+    li:has(#btnBoard) {
+        order: 2;
+    }
+
+    li:has(#btnPin) {
+        order: 3;
+    }
+
+    #profile {
+        order: 4;
+    }
+
+    li:has(#sign-in) {
+        order: 5;
+    }
+}

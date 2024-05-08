@@ -185,7 +185,7 @@ export class PinFeed extends HTMLElement {
         const imageHeight = this.querySelector('article > img').offsetHeight - 150;
         const commentsElement= this.querySelector('.comments');
 
-        const adjustedHeight = Math.max(imageHeight, 400);
+        const adjustedHeight = Math.max(imageHeight, 600);
 
         commentsElement.style.maxHeight = adjustedHeight + 'px';
     }
