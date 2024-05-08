@@ -1,25 +1,3 @@
-/*
-TODO
-TAGS DONT OVERFLOW NICELY
-THEY EXTENT THE CREATE SPIN WINDOW
-asdsaasd
-sa
-d
-as
-
-d
-as
-d
-sa
-
-d
-asdasda
-todo
-todo
-todo
- */
-
-
 import {Router} from "../../js/Router.js";
 import {Toast} from "../../js/Toast.js";
 
