@@ -120,6 +120,18 @@ export class ComplexController {
         );
     };
 
+    unLoggedInUserFeed(
+        callback,
+        offset = 0,
+        limit = 100
+    ){
+        apiCallBuilder(
+            `${localBaseURL}/${this.baseURL}/unLoggedInUserFeed/${offset}/${limit}`,
+            callTypes.get,
+            callback
+        );
+    };
+
     likedUserFeed(
         crawlerID,
         callBack,

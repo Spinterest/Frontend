@@ -1,5 +1,5 @@
-import {WebController} from "../../js/api.js";
-import {Router} from "../../js/router.js";
+import {WebController, WebSpinsController} from "../../js/API.js";
+import {Router} from "../../js/Router.js";
 
 export class BoardFeed extends HTMLElement {
 
@@ -82,10 +82,32 @@ export class BoardFeed extends HTMLElement {
     }
 
     populateFeed(webs) {
+        document.getElementById("header-section-web-section").classList.add("hidden");
         const feed = document.getElementById("card-feed");
 
         if (!webs || !Array.isArray(webs)){
             webs = [webs];
+        }
+
+        webs.forEach(web => {
+            const existingBoardCard = document.getElementById(`$board-card-${web.webID}`);
+            if (!existingBoardCard) {
+                const boardCard = document.createElement('board-card');
+                boardCard.id = `$board-card-${web.webID}`;
+                boardCard.webID = web.webID;
+                boardCard.webTitle = web.webTitle;
+                boardCard.webDescription = web.webDescription;
+
+                boardCard.addEventListener('click',
+                    (event) =>{
+                        const router = new Router();
+                        router.handleNavigation('/boards-view', web);
+                    }
+                );
+
+                    feed.appendChild(boardCard);
+                }
+            });
         }
 
         webs.forEach(web => {

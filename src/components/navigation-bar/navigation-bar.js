@@ -1,5 +1,5 @@
 import {Router} from "../../js/Router.js";
-import {CrawlerController} from "../../js/api.js";
+import {CrawlerController} from "../../js/API.js";
 
 
 export class NavigationBar extends HTMLElement {
