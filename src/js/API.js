@@ -67,14 +67,6 @@ export class ComplexController {
         );
     };
 
-    getAllSpins(callback){
-        apiCallBuilder(
-            `${localBaseURL}/${this.baseURL}/allSpins`,
-            callTypes.get,
-            callback
-        );
-    };
-
     getCrawlersWhoLikedSpin(spinID, callback){
         apiCallBuilder(
             `${localBaseURL}/${this.baseURL}/usersWhoLikedSpin/${spinID}`,
@@ -125,6 +117,18 @@ export class ComplexController {
             `${localBaseURL}/${this.baseURL}/dislikedUserFeed/${crawlerID}/${offset}/${limit}`,
             callTypes.get,
             callBack
+        );
+    };
+
+    unLoggedInUserFeed(
+        callback,
+        offset = 0,
+        limit = 100
+    ){
+        apiCallBuilder(
+            `${localBaseURL}/${this.baseURL}/unLoggedInUserFeed/${offset}/${limit}`,
+            callTypes.get,
+            callback
         );
     };
 
