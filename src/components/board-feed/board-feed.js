@@ -1,8 +1,5 @@
-import {BoardCard} from "../board-card/board-card.js";
-import {
-    WebController, WebSpinsController
-} from "../../js/api.js";
-import {Router} from "../../js/router.js";
+import {WebController, WebSpinsController} from "../../js/API.js";
+import {Router} from "../../js/Router.js";
 
 export class BoardFeed extends HTMLElement {
 
