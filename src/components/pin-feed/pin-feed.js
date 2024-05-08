@@ -19,39 +19,38 @@ export class PinFeed extends HTMLElement {
         this.spinCommentController = new SpinCommentController();
         this.spinLikesController = new SpinLikesController();
         this.commentLikesController = new CommentLikesController();
-
     }
 
     connectedCallback() {
-
         fetch('components/pin-feed/pin-feed.html')
             .then(response => response.text())
             .then(html => {
                 this.innerHTML = html;
-                const pin = history.state;
-                this.loadData(pin);
+                this.pin = history.state;
+                this.loadData();
                 this.addCommentEventListener();
                 this.likeSpinEventListener()
             });
 
     }
 
-    loadData(spin) {
+    loadData() {
+        this.populateImage(this.pin);
+        this.spinController.getSpinWithID(this.pin.spinID, this.populateSpinDetails.bind(this))
 
-        this.populateImage(spin);
-        this.spinController.getSpinWithID(spin.spinID, this.populateSpinDetails.bind(this))
+        this.complexController.getCommentsForSpin(this.pin.spinID, this.populateComments.bind(this))
 
-        this.complexController.getCommentsForSpin(spin.spinID, this.populateComments.bind(this))
-
-        this.complexController.getCrawlersWhoLikedSpin(spin.spinID, this.populateLikeButton.bind(this))
-
+        this.complexController.getCrawlersWhoLikedSpin(this.pin.spinID, this.populateLikeButton.bind(this))
     }
 
     populateLikeButton(data) {
-
-        if (!data.length) {
-            new Toast('Could not load the likes.', 'error');
+        if (!data || data.hasOwnProperty('error')) {
+            new Toast('Could not load the likes for the spin.', 'error');
             return;
+        }
+
+        if (!Array.isArray(data)){
+            data = [data];
         }
 
         const span = this.querySelector('.like-image-button > span');
@@ -63,20 +62,16 @@ export class PinFeed extends HTMLElement {
             const likeButton = this.querySelector('.like-image-button');
             likeButton.classList.add('active-like');
         }
-
     }
 
     populateImage(pin) {
-
         const img = this.querySelector('article > img');
 
         img.src = pin.spinLink;
         img.alt = 'spin feed image';
-
     }
 
     populateSpinDetails(spin) {
-
         this.crawlerController.getUserWithID(spin.crawlerID, this.populateUsername.bind(this))
 
         if (!spin.spinTitle) {
@@ -92,11 +87,9 @@ export class PinFeed extends HTMLElement {
 
         const imageDescription = this.querySelector('.image-description');
         imageDescription.textContent = spin.spinDescription;
-
     }
 
     populateUsername(crawler) {
-
         const spinCrawler = this.querySelector('.spin-crawler');
 
         const span = document.createElement('span')
@@ -104,43 +97,51 @@ export class PinFeed extends HTMLElement {
 
         spinCrawler.appendChild(span);
         spinCrawler.appendChild(document.createTextNode(crawler.crawlerUserName));
-
     }
 
     populateComments(comments) {
-
         const commentOutput = this.querySelector('.comment-output');
+
+        if (!Array.isArray(comments)){
+            comments = [comments];
+        }
 
         comments
             .map(comment => this.createComment(comment))
-            .forEach(section => commentOutput.appendChild(section));
+            .forEach(section => {
+                if (section){
+                    commentOutput.appendChild(section);
+                }
+            }
+        );
 
         this.styleCommentsToFitImage();
 
         // add the likes to each comment
         const loggedInUser = 3
         this.complexController.getCommentsLikedByCrawlerID(loggedInUser, this.populateCommentLikes.bind(this))
-
     }
 
     populateCommentLikes(data) {
-
-        if (!data) {
+        if (!data || data.hasOwnProperty('error')) {
             new Toast('Could not load your liked comments.', 'error');
             return;
         }
 
+        if (!Array.isArray(data)) {
+            data = [data];
+        }
+
         data
-            .filter(spin => spin.spinID === history.state.spinID)
-            .forEach(spin => {
-                const likedCommentButton = this.querySelector(`#comment-${spin.spinCommentID}`)
+            .filter(spinComment => spinComment.spinID === this.pin.spinID)
+            .forEach(spinComment => {
+                const likedCommentButton = this.querySelector(`#comment-${spinComment.spinCommentID}`)
 
                 likedCommentButton.classList.add('active-like');
             })
     }
 
     addCommentEventListener() {
-
         const button = this.querySelector("#sendButton");
 
         button.addEventListener('click', () => {
@@ -154,47 +155,48 @@ export class PinFeed extends HTMLElement {
 
             // call api, create comment
             const loggedInUser = 3
-            this.spinCommentController.makeCommentToSpin({
-                "crawlerID": loggedInUser,
-                "spinID": history.state.spinID,
-                "spinCommentMessage": input.value
-            }, this.addComment.bind(this))
-
+            this.spinCommentController.makeCommentToSpin(
+                this.pin.spinID,
+                loggedInUser,
+                input.value,
+                this.addComment.bind(this));
         });
 
     }
 
     addComment(data) {
-
-        if  (data && data.command === 'INSERT') {
-            new Toast('Comment successfully created.', 'success')
-
-            const input = this.querySelector('#typed-comment');
-            input.value = '';
-
-            this.complexController.getCommentsForSpin(history.state.spinID, this.populateComments.bind(this))
+        if (!data || data.hasOwnProperty('error')) {
+            new Toast('Something went wrong creating the comment.', 'error')
             return;
         }
 
-        new Toast('Something went wrong creating the comment.', 'error')
+        new Toast('Comment successfully created.', 'success')
 
+        const input = this.querySelector('#typed-comment');
+        input.value = '';
+
+        this.complexController.getCommentsForSpin(this.pin.spinID, this.populateComments.bind(this));
+        return;
     }
 
     styleCommentsToFitImage() {
-
         const imageHeight = this.querySelector('article > img').offsetHeight - 150;
         const commentsElement= this.querySelector('.comments');
 
         const adjustedHeight = Math.max(imageHeight, 400);
 
         commentsElement.style.maxHeight = adjustedHeight + 'px';
-
     }
 
     createComment(comment) {
+        const existingCommentSection = document.getElementById(`comment-section-${comment.spinCommentID}`);
+        if (existingCommentSection) {
+            return null;
+        }
 
         const section = document.createElement('section');
         section.className = 'comment';
+        section.id = `comment-section-${comment.spinCommentID}`;
 
         const h3 = document.createElement('h3');
 
@@ -212,9 +214,10 @@ export class PinFeed extends HTMLElement {
         `
 
         // for each button - add an event listener
-        button.addEventListener('click', (event) => this.handleCommentLikeButtonClick(event.currentTarget));
+        button.addEventListener('click', (event) => this.handleCommentLikeButtonClick(comment, event.currentTarget));
 
         const span = document.createElement('span');
+        span.id = `comment-like-count-${comment.spinCommentID}`;
         span.textContent = comment.spinCommentLikeCount;
 
         button.appendChild(span);
@@ -225,10 +228,9 @@ export class PinFeed extends HTMLElement {
 
 
         return section;
-
     }
 
-    handleCommentLikeButtonClick(event) {
+    handleCommentLikeButtonClick(comment, event) {
         const loggedInUser = 3;
 
         const idParts = event.id.split('-');
@@ -237,35 +239,57 @@ export class PinFeed extends HTMLElement {
         // unlike
         if (event.classList.contains('active-like')) {
             // remove
-            event.classList.remove('active-like');
-
             this.commentLikesController.removeLikeFromComment(
                 loggedInUser,
                 spinCommentID,
-                () => {
-                    // TODO : update frontend
+                (data) => {
+                    if (!data || data.hasOwnProperty('error')){
+                        new Toast('There was an error trying to unlike this comment. Please try again later.', 'error');
+                        return;
+                    }
+
+                    if (data.hasOwnProperty('alert')){
+                        new Toast('This comment was already unliked.', 'info');
+                        return;
+                    }
+
+                    event.classList.remove('active-like');
+                    new Toast('Successfully unliked comment.', 'success');
+
+                    const commentCountSpan = document.getElementById(`comment-like-count-${comment.spinCommentID}`);
+                    commentCountSpan.textContent = `${Number(commentCountSpan.textContent) - 1}`;
                }
             )
             return;
         }
 
         // like
-        event.classList.add('active-like');
         this.commentLikesController.likeComment(
             loggedInUser,
             spinCommentID,
-            () => {
-            // TODO : update frontend
+            (data) => {
+                if (!data || data.hasOwnProperty('error')){
+                    new Toast('There was an error trying to like this comment. Please try again later.', 'error');
+                    return;
+                }
+
+                if (data.hasOwnProperty('alert')){
+                    new Toast('This comment was already like.', 'info');
+                    return;
+                }
+
+                event.classList.add('active-like');
+                new Toast('Successfully like comment.', 'success');
+                const commentCountSpan = document.getElementById(`comment-like-count-${comment.spinCommentID}`);
+                commentCountSpan.textContent = `${Number(commentCountSpan.textContent) + 1}`;
             }
         )
 
     }
 
     likeSpinEventListener() {
-
         const likeButton = this.querySelector('.like-image-button');
         likeButton.addEventListener('click', this.handleLikeButtonClick.bind(this))
-
     }
 
     handleLikeButtonClick() {
@@ -274,25 +298,51 @@ export class PinFeed extends HTMLElement {
 
         // unlike
         if (likeButton.classList.contains('active-like')) {
-            likeButton.classList.remove('active-like');
-            this.spinLikesController.removeLikeFromSpin({
-                "crawlerID": loggedInUser,
-                "spinID": history.state.spinID
-            }, () => {
-                this.complexController.getCrawlersWhoLikedSpin(history.state.spinID, this.populateLikeButton.bind(this))
-            });
+            this.spinLikesController.removeLikeFromSpin(
+                this.pin.spinID,
+                loggedInUser,
+                (data) => {
+                    if (!data || data.hasOwnProperty('error')){
+                        new Toast('There was an error trying to unlike this spin. Please try again later.', 'error');
+                        return;
+                    }
+
+                    if (data.hasOwnProperty('alert')){
+                        new Toast('This spin was already unliked.', 'info');
+                        return;
+                    }
+
+                    likeButton.classList.remove('active-like');
+                    new Toast('Successfully unliked spin.', 'success');
+
+                    const likeCountSpan = this.querySelector('.like-image-button > span');
+                    likeCountSpan.textContent = `${Number(likeCountSpan.textContent) - 1}`;
+                }
+            );
             return;
         }
 
         // like
-        likeButton.classList.add('active-like');
+        this.spinLikesController.likeSpin(
+            this.pin.spinID,
+            loggedInUser,
+            (data) => {
+                if (!data || data.hasOwnProperty('error')){
+                    new Toast('There was an error trying to like this spin. Please try again later.', 'error');
+                    return;
+                }
 
-        this.spinLikesController.likeSpin({
-            "crawlerID": loggedInUser,
-            "spinID": history.state.spinID
-        }, () => {
-            this.complexController.getCrawlersWhoLikedSpin(history.state.spinID, this.populateLikeButton.bind(this));
-        });
+                if (data.hasOwnProperty('alert')){
+                    new Toast('This spin was already like.', 'info');
+                    return;
+                }
 
+                likeButton.classList.add('active-like');
+                new Toast('Successfully like spin.', 'success');
+
+                const likeCountSpan = this.querySelector('.like-image-button > span');
+                likeCountSpan.textContent = `${Number(likeCountSpan.textContent) + 1}`;
+            }
+        );
     }
 }
