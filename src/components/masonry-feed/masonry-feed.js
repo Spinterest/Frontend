@@ -120,6 +120,16 @@ export class MasonryFeed extends HTMLElement {
             });
     }
 
+    getExistingTags(){
+        const tagOverFlow = document.getElementById("tag-overflow-area");
+        const tagNames = [];
+        for (let index = 0; index < tagOverFlow.children.length; index++) {
+            const tagOverflowSection = tagOverFlow.children[index];
+            tagNames.push(tagOverflowSection.querySelector('.tag-button').textContent);
+        }
+        return tagNames;
+    }
+
     populateTagDropDown(tags){
         if (!tags){
             tags = [];
@@ -230,12 +240,12 @@ export class MasonryFeed extends HTMLElement {
                         tagOverFlow.appendChild(tagOverflowSection);
 
                         tagButtonDelete.addEventListener('click', (event) => {
-                            console.log("clicked");
                             tagOverFlow.removeChild(tagOverflowSection);
                         });
 
                         tagButton.addEventListener('click', (event) =>{
-                            console.log("clocked but button");
+                            event.preventDefault();
+                            event.stopPropagation();
                         })
                     }
                     else {
@@ -247,27 +257,37 @@ export class MasonryFeed extends HTMLElement {
 
             tagsInput.addEventListener('focusin', () => {
                 if (tagsInput.value === ''){
-                    this.complexClass.getTopTags(this.populateTagDropDown.bind(this));
+                    this.complexClass.getTopTags(
+                        this.populateTagDropDown.bind(this),
+                        this.getExistingTags()
+                );
                     return;
                 }
-                this.tagClass.filterTags(tagsInput.value, this.populateTagDropDown.bind(this));
+                this.tagClass.filterTags(
+                    tagsInput.value,
+                    this.getExistingTags(),
+                    this.populateTagDropDown.bind(this)
+                );
             });
 
             tagsInput.addEventListener('input', () => {
                 if (tagsInput.value === ''){
-                    this.complexClass.getTopTags(this.populateTagDropDown.bind(this));
+                    this.complexClass.getTopTags(
+                        this.populateTagDropDown.bind(this),
+                        this.getExistingTags()
+                    );
                     return;
                 }
-                this.tagClass.filterTags(tagsInput.value, this.populateTagDropDown.bind(this));
+                this.tagClass.filterTags(
+                    tagsInput.value,
+                    this.getExistingTags(),
+                    this.populateTagDropDown.bind(this)
+                );
             });
 
             buttonCreate.addEventListener("click", () =>
             {
-                const tagNames = [];
-                for (let index = 0; index < tagOverFlow.children.length; index++) {
-                    const tagOverflowSection = tagOverFlow.children[index];
-                    tagNames.push(tagOverflowSection.querySelector('.tag-button').textContent);
-                }
+                const tagNames = this.getExistingTags();
                 this.closeModal(modal);
             });
         }
