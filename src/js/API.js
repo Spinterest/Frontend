@@ -549,7 +549,6 @@ export const apiCallBuilder = async (
             callback(data);
         }
         catch {
-            callback(null);
         }
     })
     .catch(error => {

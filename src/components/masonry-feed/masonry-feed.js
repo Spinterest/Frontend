@@ -19,10 +19,6 @@ export class MasonryFeed extends HTMLElement {
         this.spinClass = new SpinController();
         this.webSpinClass = new WebSpinsController();
 
-    loadData(){
-        console.log(localStorage.getItem('crawlerID'));
-        console.log(localStorage.getItem('crawlerEmail'));
-        console.log(localStorage.getItem('crawlerToken'));
         // ToDo, properly get crawlerID / crawlerEmail
         this.crawlerID = 3;
     }
@@ -59,6 +55,10 @@ export class MasonryFeed extends HTMLElement {
     }
 
     loadData(profileWebs){
+        console.log(localStorage.getItem('crawlerID'));
+        console.log(localStorage.getItem('crawlerEmail'));
+        console.log(localStorage.getItem('crawlerToken'));
+
         if (profileWebs != null){
             this.profileWebTitles = profileWebs;
         }
@@ -171,7 +171,7 @@ export class MasonryFeed extends HTMLElement {
                                    return;
                                }
                                if (data.hasOwnProperty('alert')) {
-                                   new Toast(`Spin already existed in ${item.textContent}`, 'warning');
+                                   new Toast(`Spin already existed in ${item.textContent}`, 'info');
                                    return;
                                }
 

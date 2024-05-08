@@ -7,8 +7,6 @@ import {BoardCard} from "./components/board-card/board-card.js";
 import {PinFeed} from "./components/pin-feed/pin-feed.js";
 import {CrawlerController} from "../../js/api.js";
 
-
-
 customElements.define('pin-feed', PinFeed);
 customElements.define('navigation-bar', NavigationBar);
 customElements.define('masonry-feed', MasonryFeed);
