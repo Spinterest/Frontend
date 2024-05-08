@@ -5,7 +5,7 @@ import {
     ComplexController,
     SpinController,
     WebSpinsController
-} from "../../js/api.js";
+} from "../../js/API.js";
 
 export class MasonryFeed extends HTMLElement {
 
