@@ -88,10 +88,6 @@ nav h1 {
     vertical-align: middle;
 }
 
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
 
 .dropdown-content {
   display: none;
