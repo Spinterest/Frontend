@@ -50,7 +50,7 @@ article button {
 
 #create-image{
     height: 35em;
-    overflow: hidden;
+    overflow-y: auto;
 }
 
 /*
@@ -101,8 +101,12 @@ CSS can really be done better, Kat is no expert here sadly
 }
 
 .tags-overflow{
-    display: flex;
     grid-area: tags;
+
+    display: grid;
+    width: 19em;
+    grid-template-columns: repeat(auto-fit, minmax(5em, 1fr));
+    grid-row-gap: 1em;
 }
 
 .tag-button{
