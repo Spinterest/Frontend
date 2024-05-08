@@ -148,8 +148,8 @@ export class PinFeed extends HTMLElement {
             // get input
             const input = this.querySelector('#typed-comment');
 
-            if (!(input && input.value && input.value.length > 10)) {
-                new Toast('Comment should be longer than 10 characters.', 'error')
+            if (!(input && input.value && input.value.length > 0)) {
+                new Toast('Comment should be longer than 0 characters.', 'error')
                 return;
             }
 
