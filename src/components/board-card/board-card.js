@@ -33,7 +33,10 @@ export class BoardCard extends HTMLElement {
     }
 
     populateCard(data) {
-        if (!data || !Array.isArray(data)) {
+        if (!data){
+            data = [];
+        }
+        else if (!Array.isArray(data)) {
             data = [data];
         }
 

@@ -25,7 +25,8 @@ import {Toast} from "../../js/Toast.js";
 
 import {
     ComplexController,
-    SpinController,
+    SpinController, 
+    TagController,
     WebSpinsController
 } from "../../js/API.js";
 
@@ -40,6 +41,7 @@ export class MasonryFeed extends HTMLElement {
         this.complexClass = new ComplexController ();
         this.spinClass = new SpinController();
         this.webSpinClass = new WebSpinsController();
+        this.tagClass = new TagController();
 
         // ToDo, properly get crawlerID / crawlerEmail
         this.crawlerID = 3;
@@ -118,9 +120,41 @@ export class MasonryFeed extends HTMLElement {
             });
     }
 
+    populateTagDropDown(tags){
+        if (!tags){
+            tags = [];
+        }
+        else if (!Array.isArray(tags)) {
+            tags = [tags];
+        }
+
+        const tagInput = document.getElementById("inpTag");
+        const btnAddTag = document.getElementById("add-tag-button");
+        const tagContainer = document.getElementById("tag-dropdown-content");
+        while (tagContainer.firstChild){
+            tagContainer.removeChild(tagContainer.firstChild);
+        }
+
+        tags.forEach(tag => {
+            const tagLabel = document.createElement("p");
+            tagLabel.textContent = tag.tagName;
+            tagContainer.appendChild(tagLabel);
+
+            tagLabel.addEventListener('click', () => {
+                tagInput.value = tag.tagName;
+                btnAddTag.click();
+
+                tagInput.focus();
+            });
+        });
+    }
+
     // TODO: Infinity Scroll
     populateFeed(data) {
-        if (!data || !Array.isArray(data)) {
+        if (!data){
+            data = []
+        }
+        else if (!Array.isArray(data)) {
             data = [data];
         }
 
@@ -157,11 +191,6 @@ export class MasonryFeed extends HTMLElement {
             };
     
             document.getElementById('btnClose').addEventListener('click', () => 
-            {
-                this.closeModal(modal);
-            })
-
-            buttonCreate.addEventListener("click", () => 
             {
                 this.closeModal(modal);
             });
@@ -215,6 +244,32 @@ export class MasonryFeed extends HTMLElement {
                     }
                 }
             );
+
+            tagsInput.addEventListener('focusin', () => {
+                if (tagsInput.value === ''){
+                    this.complexClass.getTopTags(this.populateTagDropDown.bind(this));
+                    return;
+                }
+                this.tagClass.filterTags(tagsInput.value, this.populateTagDropDown.bind(this));
+            });
+
+            tagsInput.addEventListener('input', () => {
+                if (tagsInput.value === ''){
+                    this.complexClass.getTopTags(this.populateTagDropDown.bind(this));
+                    return;
+                }
+                this.tagClass.filterTags(tagsInput.value, this.populateTagDropDown.bind(this));
+            });
+
+            buttonCreate.addEventListener("click", () =>
+            {
+                const tagNames = [];
+                for (let index = 0; index < tagOverFlow.children.length; index++) {
+                    const tagOverflowSection = tagOverFlow.children[index];
+                    tagNames.push(tagOverflowSection.querySelector('.tag-button').textContent);
+                }
+                this.closeModal(modal);
+            });
         }
 
         const router = new Router();
@@ -297,6 +352,11 @@ export class MasonryFeed extends HTMLElement {
         const uploadIcon = document.getElementById("upload-icon");
         const imageLabel = document.getElementById("lblImg");
         const imageSpan = document.getElementById("spnImg");
+        const tagOverFlow = document.getElementById("tag-overflow-area");
+
+        while (tagOverFlow.firstChild) {
+            tagOverFlow.removeChild(tagOverFlow.firstChild);
+        }
 
         titleInput.value="";
         descriptionTextArea.value="";

@@ -77,6 +77,11 @@ CSS can really be done better, Kat is no expert here sadly
     margin: 1em;
 }
 
+.overlay-button-add-tag{
+    justify-self: end;
+    align-self: center;
+}
+
 .overlay-wrapper-tags{
     justify-items: end;
     align-items: center;
@@ -122,4 +127,17 @@ CSS can really be done better, Kat is no expert here sadly
 
 .dropdown {
     grid-area: overlay;
+}
+
+.tag-dropdown {
+    grid-area: overlay;
+    grid-template-areas: 'overlay';
+    display: grid;
+    width: 100%;
+}
+
+.tag-dropdown:hover .dropdown-content {display: block;}
+
+.dropdown-content-tags-lower{
+    transform: translateY(3em);
 }

@@ -35,7 +35,7 @@ export class CommentLikesController{
     ){
 
         apiCallBuilder(
-            `${localBaseURL}/${this.baseURL}/commentLike`,
+            `${localBaseURL}/${this.baseURL}/dislikeComment`,
             callTypes.delete,
             callback,
             {
@@ -151,6 +151,16 @@ export class ComplexController {
     ){
         apiCallBuilder(
             `${localBaseURL}/${this.baseURL}/commentsLikedByCrawlerID/${crawlerID}`,
+            callTypes.get,
+            callback
+        );
+    }
+
+    getTopTags(
+        callback
+    ){
+        apiCallBuilder(
+            `${localBaseURL}/${this.baseURL}/topTags`,
             callTypes.get,
             callback
         );

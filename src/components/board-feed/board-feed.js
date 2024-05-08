@@ -85,7 +85,10 @@ export class BoardFeed extends HTMLElement {
         document.getElementById("header-section-web-section").classList.add("hidden");
         const feed = document.getElementById("card-feed");
 
-        if (!webs || !Array.isArray(webs)){
+        if (!webs){
+            webs = []
+        }
+        else if (!Array.isArray(webs)){
             webs = [webs];
         }
 
@@ -98,33 +101,10 @@ export class BoardFeed extends HTMLElement {
                 boardCard.webTitle = web.webTitle;
                 boardCard.webDescription = web.webDescription;
 
-                boardCard.addEventListener('click',
-                    (event) =>{
-                        const router = new Router();
-                        router.handleNavigation('/boards-view', web);
-                    }
-                );
-
-                    feed.appendChild(boardCard);
-                }
-            });
-        }
-
-        webs.forEach(web => {
-            const existingBoardCard = document.getElementById(`$board-card-${web.webID}`);
-            if (!existingBoardCard) {
-                const boardCard = document.createElement('board-card');
-                boardCard.id = `$board-card-${web.webID}`;
-                boardCard.webID = web.webID;
-                boardCard.webTitle = web.webTitle;
-                boardCard.webDescription = web.webDescription;
-
-                boardCard.addEventListener('click',
-                    (event) =>{
-                        const router = new Router();
-                        router.handleNavigation('/boards-view', web);
-                    }
-                );
+                boardCard.addEventListener('click', (event) => {
+                    const router = new Router();
+                    router.handleNavigation('/boards-view', web);
+                });
 
                 feed.appendChild(boardCard);
             }
