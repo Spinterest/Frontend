@@ -157,12 +157,16 @@ export class ComplexController {
     }
 
     getTopTags(
-        callback
+        callback,
+        existingTags
     ){
         apiCallBuilder(
             `${localBaseURL}/${this.baseURL}/topTags`,
-            callTypes.get,
-            callback
+            callTypes.post,
+            callback,
+            {
+                existingTags: existingTags
+            }
         );
     }
 }
@@ -429,11 +433,15 @@ export class TagController {
         );
     };
 
-    filterTags(tagName, callback){
+    filterTags(tagName, existingTags, callback){
         apiCallBuilder(
-            `${localBaseURL}/${this.baseURL}/filter/tagName/${tagName}`,
-            callTypes.get,
+            `${localBaseURL}/${this.baseURL}/filter/tagName`,
+            callTypes.post,
             callback,
+            {
+                tagName: tagName,
+                existingTags: existingTags,
+            }
         );
     };
 }
