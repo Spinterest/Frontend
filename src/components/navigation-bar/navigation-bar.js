@@ -15,6 +15,7 @@ export class NavigationBar extends HTMLElement {
                 this.innerHTML = html;
                 this.addNavigation();
                 this.addButtonEvents();
+                this.populateBar();
             });
     }
 
@@ -43,6 +44,9 @@ export class NavigationBar extends HTMLElement {
         const modalEditProfile = document.getElementById("modelEditProfile");
         const btnUpdateUsername = document.getElementById("btnUpdateUsername");
         const btnCloseUpdateUsername = document.getElementById("btnCloseUpdateUsername");
+        const btnSignOut = document.getElementById("btnSignOut");
+        const profile = document.getElementById("profile");
+        const signIn = document.getElementById("sign-in");
 
         labelUpdateUsernameError.style.display = 'none';
 
@@ -61,6 +65,7 @@ export class NavigationBar extends HTMLElement {
                 btnHome.classList.remove('active');
                 btnPin.classList.add('active');
                 btnBoard.classList.remove('active');
+                console.log(Login.userEmail)
             }
         );
 
@@ -118,5 +123,26 @@ export class NavigationBar extends HTMLElement {
                 )
             }
         )
+
+        btnSignOut.addEventListener("click", () => {
+            localStorage.removeItem("crawlerID");
+            localStorage.removeItem("crawlerEmail");
+            localStorage.removeItem("crawlerToken");
+            localStorage.removeItem("crawlerUserName");
+            profile.classList.add("hidden");
+            signIn.classList.remove("hidden");
+        })
+    }
+
+    populateBar(){
+        const profile = document.getElementById("profile");
+        const signIn = document.getElementById("sign-in")
+        if (localStorage.getItem("crawlerID")==null){
+            profile.classList.add("hidden");
+            signIn.classList.remove("hidden");
+        } else {
+            signIn.classList.add("hidden");
+            profile.classList.remove("hidden");
+        }
     }
 }

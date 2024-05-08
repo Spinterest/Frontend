@@ -19,6 +19,10 @@ export class MasonryFeed extends HTMLElement {
         this.spinClass = new SpinController();
         this.webSpinClass = new WebSpinsController();
 
+    loadData(){
+        console.log(localStorage.getItem('crawlerID'));
+        console.log(localStorage.getItem('crawlerEmail'));
+        console.log(localStorage.getItem('crawlerToken'));
         // ToDo, properly get crawlerID / crawlerEmail
         this.crawlerID = 3;
     }
