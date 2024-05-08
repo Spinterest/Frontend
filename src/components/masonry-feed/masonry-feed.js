@@ -15,9 +15,6 @@ export class MasonryFeed extends HTMLElement {
     }
 
     loadData(){
-        console.log(localStorage.getItem('crawlerID'));
-        console.log(localStorage.getItem('crawlerEmail'));
-        console.log(localStorage.getItem('crawlerToken'));
         // ToDo, properly get crawlerID / crawlerEmail
         const crawlerID = 3;
 
@@ -85,7 +82,7 @@ export class MasonryFeed extends HTMLElement {
 
             buttonCreate.addEventListener("click", () => 
             {
-                this.closeModal(modal);
+                this.complexClass.getNewSpinLink(this.createSpin.bind(this));
             })
         }
 
@@ -124,5 +121,36 @@ export class MasonryFeed extends HTMLElement {
         modal.close();
     }
 
+    async createSpin(data){
+        const titleInput = document.getElementById("inpTitle");
+        const descriptionTextArea = document.getElementById("txtDesc");
+        const imageInput = document.getElementById("inpImg");
+        var url = data.result;
+        var link = url.split('?')[0];
+        var id = localStorage.getItem("crawlerID");
+        var desc = descriptionTextArea.value;
+        var title = titleInput.value;
+        var image = imageInput.files[imageInput.files.length-1];
 
+        await fetch(url, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "multipart/form-data"
+            },
+            body: image
+        })
+
+        this.spinClass.createSpin(
+            {
+                crawlerID: id,
+                spinDescription: desc,
+                spinTitle: title,
+                spinLink: link
+            },
+            (data) => {
+                const modal = document.getElementById('create-image');
+                this.closeModal(modal);
+            }
+        )
+    }
 }

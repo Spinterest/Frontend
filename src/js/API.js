@@ -132,6 +132,14 @@ export class ComplexController {
             callBack
         );
     };
+
+    getNewSpinLink(callBack){
+        apiCallBuilder(
+            `${localBaseURL}/${this.baseURL}/spinLink`,
+            callTypes.get,
+            callBack
+        )
+    }
 }
 
 export class CrawlerController{
