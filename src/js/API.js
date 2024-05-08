@@ -67,6 +67,14 @@ export class ComplexController {
         );
     };
 
+    getAllSpins(callback){
+        apiCallBuilder(
+            `${localBaseURL}/${this.baseURL}/allSpins`,
+            callTypes.get,
+            callback
+        );
+    };
+
     getCrawlersWhoLikedSpin(spinID, callback){
         apiCallBuilder(
             `${localBaseURL}/${this.baseURL}/usersWhoLikedSpin/${spinID}`,
