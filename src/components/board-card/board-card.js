@@ -1,4 +1,4 @@
-import{ComplexController} from "../../js/api.js";
+import{ComplexController} from "../../js/API.js";
 
 export class BoardCard extends HTMLElement {
 
