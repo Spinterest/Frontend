@@ -1,5 +1,5 @@
 import {Router} from "../../js/Router.js";
-import {CrawlerController} from "../../js/api.js";
+import {CrawlerController} from "../../js/API.js";
 
 
 export class NavigationBar extends HTMLElement {
@@ -65,7 +65,6 @@ export class NavigationBar extends HTMLElement {
                 btnHome.classList.remove('active');
                 btnPin.classList.add('active');
                 btnBoard.classList.remove('active');
-                console.log(Login.userEmail)
             }
         );
 
@@ -101,10 +100,8 @@ export class NavigationBar extends HTMLElement {
 
                 // crawlerController.editCrawlerNameWithEmail(crawlerEmail, callBack);
                 crawlerController.editCrawlerNameWithID(
-                    {
-                        crawlerID: crawlerID,
-                        crawlerUserName: inpUsername.value
-                    },
+                    crawlerID,
+                    inpUsername.value,
                     (data) => {
                         // Todo, maybe add red glow on button for error
                         // The update didnt happen

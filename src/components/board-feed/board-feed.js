@@ -1,7 +1,5 @@
-import {BoardCard} from "../board-card/board-card.js";
-import {
-    WebController, WebSpinsController
-} from "../../js/api.js";
+import {WebController, WebSpinsController} from "../../js/API.js";
+import {Router} from "../../js/Router.js";
 
 export class BoardFeed extends HTMLElement {
 
@@ -52,13 +50,10 @@ export class BoardFeed extends HTMLElement {
 
             const webController = new WebController();
             webController.createWeb(
-                {
-                    crawlerID: this.crawlerID,
-                    webDescription: descriptionTextArea.value,
-                    webTitle: titleInput.value
-                },
+                this.crawlerID,
+                descriptionTextArea.value,
+                titleInput.value,
                 (data) => {
-                    // Todo, maybe add red glow on button for error
                     // The update didnt happen
                     if (!data || data.hasOwnProperty('error')){
                         labelCreateWebError.style.display = 'inherit';
@@ -71,7 +66,6 @@ export class BoardFeed extends HTMLElement {
                         return;
                     }
 
-                    // Todo, maybe add a successful animation
                     closePopup();
                     this.getData();
                 }
@@ -88,29 +82,32 @@ export class BoardFeed extends HTMLElement {
     }
 
     populateFeed(webs) {
+        document.getElementById("header-section-web-section").classList.add("hidden");
         const feed = document.getElementById("card-feed");
 
-        try {
-            webs.forEach(web => {
-                const existingBoardCard = document.getElementById(`$board-card-${web.webID}`);
-                if (!existingBoardCard) {
-                    const boardCard = document.createElement('board-card');
-                    boardCard.id = `$board-card-${web.webID}`;
-                    boardCard.webID = web.webID;
-                    boardCard.webTitle = web.webTitle;
-                    boardCard.webDescription = web.webDescription;
-
-                    feed.appendChild(boardCard);
-                }
-            });
-        } catch (error) {
-            const boardCard = document.createElement('board-card');
-            boardCard.webID = webs.webID;
-            boardCard.webDescription = webs.webDescription;
-            boardCard.webTitle = webs.webTitle;
-
-            feed.appendChild(boardCard); 
+        if (!webs){
+            webs = []
         }
-        
+        else if (!Array.isArray(webs)){
+            webs = [webs];
+        }
+
+        webs.forEach(web => {
+            const existingBoardCard = document.getElementById(`$board-card-${web.webID}`);
+            if (!existingBoardCard) {
+                const boardCard = document.createElement('board-card');
+                boardCard.id = `$board-card-${web.webID}`;
+                boardCard.webID = web.webID;
+                boardCard.webTitle = web.webTitle;
+                boardCard.webDescription = web.webDescription;
+
+                boardCard.addEventListener('click', (event) => {
+                    const router = new Router();
+                    router.handleNavigation('/boards-view', web);
+                });
+
+                feed.appendChild(boardCard);
+            }
+        });
     }
 }

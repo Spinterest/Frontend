@@ -1,0 +1,16 @@
+.mainContainer {
+    background-color: var(--primary-bg-color);
+    color: var(--text-color);
+
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    gap: 1em;
+    padding: 0.3em 0 0 0;
+    flex-wrap: wrap;
+}
+
+.hidden {
+    display: none;
+}
