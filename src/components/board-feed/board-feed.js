@@ -84,7 +84,9 @@ export class BoardFeed extends HTMLElement {
     }
 
     populateFeed(webs) {
+        document.getElementById("header-section-web-section").classList.add("hidden");
         const feed = document.getElementById("card-feed");
+
 
         try {
             webs.forEach(web => {

@@ -35,6 +35,8 @@ export class PinFeed extends HTMLElement {
     }
 
     loadData() {
+        document.getElementById("header-section-web-section").classList.add("hidden");
+
         this.populateImage(this.pin);
         this.spinController.getSpinWithID(this.pin.spinID, this.populateSpinDetails.bind(this))
 
