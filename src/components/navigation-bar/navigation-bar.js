@@ -96,10 +96,8 @@ export class NavigationBar extends HTMLElement {
 
                 // crawlerController.editCrawlerNameWithEmail(crawlerEmail, callBack);
                 crawlerController.editCrawlerNameWithID(
-                    {
-                        crawlerID: crawlerID,
-                        crawlerUserName: inpUsername.value
-                    },
+                    crawlerID,
+                    inpUsername.value,
                     (data) => {
                         // Todo, maybe add red glow on button for error
                         // The update didnt happen

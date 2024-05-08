@@ -53,11 +53,9 @@ export class BoardFeed extends HTMLElement {
 
             const webController = new WebController();
             webController.createWeb(
-                {
-                    crawlerID: this.crawlerID,
-                    webDescription: descriptionTextArea.value,
-                    webTitle: titleInput.value
-                },
+                this.crawlerID,
+                descriptionTextArea.value,
+                titleInput.value,
                 (data) => {
                     // Todo, maybe add red glow on button for error
                     // The update didnt happen
