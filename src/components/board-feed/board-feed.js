@@ -2,6 +2,7 @@ import {BoardCard} from "../board-card/board-card.js";
 import {
     WebController, WebSpinsController
 } from "../../js/api.js";
+import {Router} from "../../js/router.js";
 
 export class BoardFeed extends HTMLElement {
 
@@ -52,11 +53,9 @@ export class BoardFeed extends HTMLElement {
 
             const webController = new WebController();
             webController.createWeb(
-                {
-                    crawlerID: this.crawlerID,
-                    webDescription: descriptionTextArea.value,
-                    webTitle: titleInput.value
-                },
+                this.crawlerID,
+                descriptionTextArea.value,
+                titleInput.value,
                 (data) => {
                     // Todo, maybe add red glow on button for error
                     // The update didnt happen
@@ -99,6 +98,13 @@ export class BoardFeed extends HTMLElement {
                     boardCard.webID = web.webID;
                     boardCard.webTitle = web.webTitle;
                     boardCard.webDescription = web.webDescription;
+
+                    boardCard.addEventListener('click',
+                        (event) =>{
+                            const router = new Router();
+                            router.handleNavigation('/boards-view', web);
+                        }
+                    );
 
                     feed.appendChild(boardCard);
                 }

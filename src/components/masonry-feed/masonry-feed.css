@@ -9,6 +9,7 @@ img {
     width: 100%;
     border-radius: 1em;
     cursor: pointer;
+    grid-area: overlay;
 }
 
 article button {
@@ -35,3 +36,55 @@ article button {
     overflow: hidden;
 }
 
+.image-wrapper{
+    display: grid;
+    grid-template-areas: 'overlay';
+    justify-items: end;
+    align-items: start;
+}
+
+.image-button{
+    width: 1.5em;
+    height: 1.5em;
+
+    grid-area: overlay;
+    margin: 1em;
+}
+
+.hidden{
+    display: none;
+}
+
+/*
+    This code was copied from navigation-bar css
+    The smart people can decide if this should be removed or not
+*/
+
+.dropdown {
+    /*position: relative;*/
+    /*display: inline-block;*/
+    grid-area: overlay;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: var(--primary-bg-color);
+    min-width: 10em;
+    box-shadow: 0em 0.6em 1em 0em rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content p {
+    color: var(--secondary-text-color);
+    text-align: left;
+    margin: 0;
+    padding: 0.8em 1em;
+    text-decoration: none;
+    display: block;
+    cursor: pointer;
+}
+
+.dropdown-content p:hover {background-color: var(--secondary-bg-color);}
+
+.dropdown:hover .dropdown-content {display: block;}

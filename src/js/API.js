@@ -166,53 +166,53 @@ export class CrawlerController{
         );
     };
 
-    login(crawler, callBack){
+    login(crawlerEmail, callBack){
         apiCallBuilder(
             `${localBaseURL}/${this.baseURL}/login`,
             callTypes.post,
             callBack,
-            {crawlerEmail: crawler.crawlerEmail}
+            {crawlerEmail: crawlerEmail}
         );
     };
 
-    deleteUserWithEmail(crawler, callBack){
+    deleteUserWithEmail(crawlerEmail, callBack){
         apiCallBuilder(
             `${localBaseURL}/${this.baseURL}/crawlerEmail`,
             callTypes.put,
             callBack,
-            {crawlerEmail: crawler.crawlerEmail}
+            {crawlerEmail: crawlerEmail}
         );
     };
 
-    deleteUserWithID(crawler, callBack){
+    deleteUserWithID(crawlerID, callBack){
         apiCallBuilder(
             `${localBaseURL}/${this.baseURL}/crawlerID`,
             callTypes.put,
             callBack,
-            {crawlerID: crawler.crawlerID}
+            {crawlerID: crawlerID}
         );
     };
 
-    editCrawlerNameWithID(crawler, callBack){
+    editCrawlerNameWithID(crawlerID, crawlerUserName, callBack){
         apiCallBuilder(
             `${localBaseURL}/${this.baseURL}/editCrawlerNameWithID`,
             callTypes.put,
             callBack,
             {
-                crawlerID: crawler.crawlerID,
-                crawlerUserName: crawler.crawlerUserName
+                crawlerID: crawlerID,
+                crawlerUserName: crawlerUserName
             }
         );
     };
 
-    editCrawlerNameWithEmail(crawler, callBack){
+    editCrawlerNameWithEmail(crawlerEmail, crawlerUserName, callBack){
         apiCallBuilder(
             `${localBaseURL}/${this.baseURL}/editCrawlerNameWithEmail`,
             callTypes.put,
             callBack,
             {
-                crawlerEmail: crawler.crawlerEmail,
-                crawlerUserName: crawler.crawlerUserName
+                crawlerEmail: crawlerEmail,
+                crawlerUserName: crawlerUserName
             }
         );
     };
@@ -240,12 +240,16 @@ export class SpinCommentController{
         );
     };
 
-    makeCommentToSpin(spinComment, callback){
+    makeCommentToSpin(spinID, crawlerID, spinCommentMessage, callback){
         apiCallBuilder(
             `${localBaseURL}/${this.baseURL}/spinComment`,
             callTypes.post,
             callback,
-            spinComment
+            {
+                spinID: spinID,
+                crawlerID: crawlerID,
+                spinCommentMessage: spinCommentMessage
+            }
         );
     };
 }
@@ -272,12 +276,17 @@ export class SpinController {
         );
     };
 
-    createSpin(spin, callback){
+    createSpin(spinLink, spinDescription, spinTitle, crawlerID, callback){
         apiCallBuilder(
             `${localBaseURL}/${this.baseURL}/createSpin`,
             callTypes.post,
             callback,
-            spin
+            {
+                spinLink: spinLink,
+                spinDescription: spinDescription,
+                spinTitle: spinTitle,
+                crawlerID: crawlerID
+            }
         );
     };
 
@@ -321,21 +330,27 @@ export class SpinLikesController {
         this.baseURL = "spinLikes";
     }
 
-    likeSpin(spinLike, callback){
+    likeSpin(spinID, crawlerID, callback){
         apiCallBuilder(
             `${localBaseURL}/${this.baseURL}/spinLike`,
             callTypes.post,
             callback,
-            spinLike
+            {
+                spinID: spinID,
+                crawlerID: crawlerID
+            }
         );
     };
 
-    removeLikeFromSpin(spinLike, callback){
+    removeLikeFromSpin(spinID, crawlerID, callback){
         apiCallBuilder(
             `${localBaseURL}/${this.baseURL}/spinLike`,
             callTypes.delete,
             callback,
-            spinLike
+            {
+                spinID: spinID,
+                crawlerID: crawlerID
+            }
         );
     };
 }
@@ -345,21 +360,27 @@ export class SpinTagsController {
         this.baseURL = "spinTags";
     }
 
-    addTagToSpin(spinTag, callback){
+    addTagToSpin(tagID, spinID, callback){
         apiCallBuilder(
             `${localBaseURL}/${this.baseURL}/spinTag`,
             callTypes.post,
             callback,
-            spinTag
+            {
+                tagID: tagID,
+                spinID: spinID
+            }
         );
     };
 
-    removeTagFromSpin(spinTag, callback){
+    removeTagFromSpin(tagID, spinID, callback){
         apiCallBuilder(
             `${localBaseURL}/${this.baseURL}/spinTag`,
             callTypes.delete,
             callback,
-            spinTag
+            {
+                tagID: tagID,
+                spinID: spinID
+            }
         );
     };
 }
@@ -377,12 +398,12 @@ export class TagController {
         );
     };
 
-    addTag(tag, callback){
+    addTag(tagName, callback){
         apiCallBuilder(
             `${localBaseURL}/${this.baseURL}/createTag`,
             callTypes.post,
             callback,
-            tag
+            {tagName: tagName}
         );
     };
 
@@ -416,12 +437,16 @@ export class WebController{
         );
     };
 
-    createWeb(web, callback){
+    createWeb(crawlerID, webDescription, webTitle, callback){
         apiCallBuilder(
             `${localBaseURL}/${this.baseURL}/createWeb`,
             callTypes.post,
             callback,
-            web
+            {
+                webDescription: webDescription,
+                webTitle: webTitle,
+                crawlerID: crawlerID
+            }
         );
     };
 
@@ -465,21 +490,27 @@ export class WebSpinsController {
         this.baseURL = 'webSpins';
     }
 
-    addSpinToWeb(webSpin, callback) {
+    addSpinToWeb(webID, spinID, callback) {
         apiCallBuilder(
             `${localBaseURL}/${this.baseURL}/createWebSpin`,
             callTypes.post,
             callback,
-            webSpin
+            {
+                webID: webID,
+                spinID: spinID
+            }
         );
     };
 
-    removeSpinFromWeb(webSpin, callback) {
+    removeSpinFromWeb(webID, spinID, callback) {
         apiCallBuilder(
             `${localBaseURL}/${this.baseURL}/deleteWebSpin`,
             callTypes.delete,
             callback,
-            webSpin
+            {
+                webID: webID,
+                spinID: spinID
+            }
         );
     };
 }
