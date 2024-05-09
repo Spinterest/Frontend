@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'FrontEnd/**' # Adjust this path as needed
+      - 'src/**' # Adjust this path as needed
   workflow_dispatch:
 
 permissions:
@@ -28,10 +28,12 @@ jobs:
 
       - name: Package artifact
         run: zip -r spinterestfront.zip *
+        working-directory: src
 
       - name: Upload artifact to S3
         run: aws s3 cp spinterestfront.zip s3://${{ secrets.BUCKET_NAME }}/spinFront-${{ github.run_id }}.zip
-
+        working-directory: src
+        
   deploy:
     runs-on: ubuntu-latest
     needs: build
