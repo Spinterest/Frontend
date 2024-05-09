@@ -1,25 +1,3 @@
-/*
-TODO
-TAGS DONT OVERFLOW NICELY
-THEY EXTENT THE CREATE SPIN WINDOW
-asdsaasd
-sa
-d
-as
-
-d
-as
-d
-sa
-
-d
-asdasda
-todo
-todo
-todo
- */
-
-
 import {Router} from "../../js/Router.js";
 import {Toast} from "../../js/Toast.js";
 
@@ -289,7 +267,7 @@ export class MasonryFeed extends HTMLElement {
 
             buttonCreate.addEventListener("click", () => {
                 const tagNames = this.getExistingTags();
-                this.closeModal(modal);
+                this.complexClass.getNewSpinLink(this.createSpin.bind(this));
             });
         }
 
@@ -394,5 +372,32 @@ export class MasonryFeed extends HTMLElement {
         imageSpan.textContent = "Select Image";
 
         modal.close();
+    }
+
+    async createSpin(data){
+        const titleInput = document.getElementById("inpTitle");
+        const descriptionTextArea = document.getElementById("txtDesc");
+        const imageInput = document.getElementById("inpImg");
+        var url = data.result;
+        var link = url.split('?')[0];
+        var id = localStorage.getItem("crawlerID");
+        var desc = descriptionTextArea.value;
+        var title = titleInput.value;
+        var image = imageInput.files[imageInput.files.length-1];
+
+        await fetch(url, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "multipart/form-data"
+            },
+            body: image
+        })
+
+        this.spinClass.createSpin(link, desc, title, id,
+            (data) => {
+                const modal = document.getElementById('create-image');
+                this.closeModal(modal);
+            }
+        )
     }
 }
