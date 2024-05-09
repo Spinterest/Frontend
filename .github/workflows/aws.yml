@@ -27,12 +27,10 @@ jobs:
           aws-region: eu-west-1
 
       - name: Package artifact
-        run: zip -r spinterestfront.zip .
-        working-directory: FrontEnd
+        run: zip -r spinterestfront.zip *
 
       - name: Upload artifact to S3
-        run: aws s3 cp spinterestfront.zip s3://${{ secrets.BUCKET_NAME }}/application-${{ github.run_id }}.zip
-        working-directory: FrontEnd
+        run: aws s3 cp spinterestfront.zip s3://${{ secrets.BUCKET_NAME }}/spinFront-${{ github.run_id }}.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -48,5 +46,5 @@ jobs:
 
       - name: Deploy to Elastic Beanstalk
         run: |
-          aws elasticbeanstalk create-application-version --application-name ${{ secrets.FRONTEND_APP_NAME }} --version-label ${{ github.run_id }} --source-bundle S3Bucket="${{ secrets.BUCKET_NAME }}",S3Key="application-${{ github.run_id }}.zip"
+          aws elasticbeanstalk create-application-version --application-name ${{ secrets.FRONTEND_APP_NAME }} --version-label ${{ github.run_id }} --source-bundle S3Bucket="${{ secrets.BUCKET_NAME }}",S3Key="spinFront-${{ github.run_id }}.zip"
           aws elasticbeanstalk update-environment --application-name ${{ secrets.FRONTEND_APP_NAME }} --environment-name ${{ secrets.FRONTEND_ENV_NAME }} --version-label ${{ github.run_id }}
