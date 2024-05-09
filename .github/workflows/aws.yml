@@ -44,8 +44,25 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           role-session-name: spinterest-build-${{ github.run_id }}
           aws-region: eu-west-1
-
-      - name: Deploy to Elastic Beanstalk
-        run: |
-          aws elasticbeanstalk create-application-version --application-name ${{ secrets.FRONTEND_APP_NAME }} --version-label ${{ github.run_id }} --source-bundle S3Bucket="${{ secrets.BUCKET_NAME }}",S3Key="spinterestfront-${{ github.run_id }}.zip"
-          aws elasticbeanstalk update-environment --application-name ${{ secrets.FRONTEND_APP_NAME }} --environment-name ${{ secrets.FRONTEND_ENV_NAME }} --version-label ${{ github.run_id }}
+          
+      - name: Checkout Source
+        uses: actions/checkout@v4
+        
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          
+      - name: Install Dependencies
+        run: npm install
+        
+      - name: Genrate Deployment Package
+        run: zip -r nodejs-app-build.zip *
+        
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          application_name: ${{ secrets.FRONTEND_APP_NAME }}
+          environment_name: ${{ secrets.FRONTEND_ENV_NAME }}
+          version_label: ${{ github.run_id }}
+          deployment_package: nodejs-app-build.zip
