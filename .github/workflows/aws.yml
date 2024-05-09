@@ -28,7 +28,7 @@ jobs:
 
       - name: Package artifact
         run: zip -r spinterestfront.zip .
-        working-directory: FrontEnd
+
 
       - name: Upload artifact to S3
         run: aws s3 cp spinterestfront.zip s3://${{ secrets.BUCKET_NAME }}/application-${{ github.run_id }}.zip
