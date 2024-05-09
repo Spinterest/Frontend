@@ -27,12 +27,11 @@ jobs:
           aws-region: eu-west-1
 
       - name: Package artifact
-        run: zip -r spinterestfront.zip .
+        run: zip -r spinterestfront.zip *
 
 
       - name: Upload artifact to S3
         run: aws s3 cp spinterestfront.zip s3://${{ secrets.BUCKET_NAME }}/application-${{ github.run_id }}.zip
-        working-directory: FrontEnd
 
   deploy:
     runs-on: ubuntu-latest
