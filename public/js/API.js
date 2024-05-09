@@ -7,6 +7,23 @@ const callTypes = {
     delete: "DELETE"
 }
 
+export class AuthController{
+    constructor() {
+        this.baseURL = "auth";
+    }
+
+    getCode(
+        url,
+        callback
+    ){
+        apiCallBuilder(
+            url,
+            callTypes.get,
+            callback
+        )
+    }
+}
+
 export class CommentLikesController{
     constructor() {
         this.baseURL = "commentLikes";

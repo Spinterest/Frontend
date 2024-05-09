@@ -6,6 +6,7 @@ import {BoardFeed} from "./components/board-feed/board-feed.js";
 import {BoardCard} from "./components/board-card/board-card.js";
 import {PinFeed} from "./components/pin-feed/pin-feed.js";
 import {CrawlerController} from "../../js/API.js";
+import {AuthController} from "./js/API.js";
 
 customElements.define('pin-feed', PinFeed);
 customElements.define('navigation-bar', NavigationBar);
@@ -52,6 +53,15 @@ window.handleCredentialResponse = (response) => {
     profile.classList.remove("hidden");
 }
 
+const authController = new AuthController();
 
+const urlParams = new URLSearchParams(window.location.search);
+const code = urlParams.get("code");
+if (code) {
+    localStorage.setItem('code', code);
+}
 
-  
+if (!localStorage.getItem('code')) {
+    const data = {url: "https://accounts.google.com/o/oauth2/v2/auth?scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&client_id=938276127101-roljisla2hu5nta50tv888bmj1b2ci95.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2F&response_type=code&access_type=offline&state=state_parameter_passthrough_value&include_granted_scopes=true"}
+    window.location.href = data.url;
+}

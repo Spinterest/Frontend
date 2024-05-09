@@ -11,13 +11,24 @@
 // app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`));
 
 const express = require('express');
+const cors = require('cors');
 const path = require('path');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.get('/', function(req, res) {
-    res.sendFile(path.join(__dirname, 'index.html'));
+const corsOptions ={
+    origin:'*',
+    credentials:true,
+}
+app.use(cors(corsOptions)) // Use this after the variable declaration
+
+app.use(express.static(path.join(__dirname, 'public'), {
+    extensions: ['html']
+}));
+
+app.get('/*', function(request, response) {
+    response.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // app.get('/stylesheet.css', function(req, res) {
