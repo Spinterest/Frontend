@@ -3,7 +3,8 @@ import {Toast} from "../../js/Toast.js";
 
 import {
     ComplexController,
-    SpinController,
+    SpinController, 
+    SpinTagsController,
     TagController,
     WebSpinsController
 } from "../../js/API.js";
@@ -20,6 +21,7 @@ export class MasonryFeed extends HTMLElement {
         this.spinClass = new SpinController();
         this.webSpinClass = new WebSpinsController();
         this.tagClass = new TagController();
+        this.spinTagClass = new SpinTagsController();
 
         this.crawlerID = localStorage.getItem("crawlerID")
     }
@@ -110,6 +112,11 @@ export class MasonryFeed extends HTMLElement {
         return tagNames;
     }
 
+    createSpinShowModal(){
+        const modal = document.getElementById('create-image');
+        modal.showModal()
+    }
+
     populateTagDropDown(tags) {
         if (!tags) {
             tags = [];
@@ -153,23 +160,28 @@ export class MasonryFeed extends HTMLElement {
         const article = this.querySelector('article');
 
         if (this.upload) {
-            const button = document.createElement('button');
-            button.innerHTML = `
-                <svg xmlns="http://www.w3.org/2000/svg" width="5em" height="5em" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
-                </svg>
-                <span>Create Spin</span>
-            `;
+            const existingButton = document.getElementById("create-spin-button");
+            if (!existingButton) {
+                const button = document.createElement('button');
+                button.id = "create-spin-button"
+                button.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="5em" height="5em" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+                    </svg>
+                    <span>Create Spin</span>`;
 
-            const modal = document.getElementById('create-image');
+                button.addEventListener('click', () => {
+                    this.createSpinShowModal();
+                })
 
-            button.addEventListener('click', () => {
-                modal.showModal()
-            })
-
-            article.appendChild(button);
-
-            const buttonCreate = document.getElementById("btnCreate");
+                article.appendChild(button);
+            }
+            else {
+                existingButton.removeEventListener("click", this.createSpinShowModal);
+                existingButton.addEventListener('click', () => {
+                    this.createSpinShowModal();
+                });
+            }
 
             document.getElementById('inpImg').onchange = function () {
                 const fileName = this.files.item(0).name;
@@ -183,7 +195,7 @@ export class MasonryFeed extends HTMLElement {
             };
 
             document.getElementById('btnClose').addEventListener('click', () => {
-                this.closeModal(modal);
+                this.closeModal();
             });
 
             const tagsInput = document.getElementById("inpTag");
@@ -240,9 +252,10 @@ export class MasonryFeed extends HTMLElement {
                     this.complexClass.getTopTags(
                         this.populateTagDropDown.bind(this),
                         this.getExistingTags()
-                );
+                    );
                     return;
                 }
+
                 this.tagClass.filterTags(
                     tagsInput.value,
                     this.getExistingTags(),
@@ -258,99 +271,113 @@ export class MasonryFeed extends HTMLElement {
                     );
                     return;
                 }
+
                 this.tagClass.filterTags(
                     tagsInput.value,
                     this.getExistingTags(),
                     this.populateTagDropDown.bind(this)
                 );
             });
-
-            buttonCreate.addEventListener("click", () => {
-                const tagNames = this.getExistingTags();
-                this.complexClass.getNewSpinLink(this.createSpin.bind(this));
-            });
         }
+
+        const spinForm = document.getElementById("create-spin-form");
+        spinForm.addEventListener('submit', (event) => {
+            const inputImage = document.getElementById('inpImg');
+            if (inputImage.files.length === 0){
+                new Toast("Please enter a file to upload a spin", "error");
+                event.preventDefault();
+                return;
+            }
+
+            new Toast("Uploading Spin", "info");
+            document.body.style.cursor = "wait";
+            this.complexClass.getNewSpinLink(this.createSpin.bind(this));
+        });
 
         const router = new Router();
         data.forEach(spin => {
-            const imageSection = document.createElement('section');
-            imageSection.setAttribute('class', 'overlay-wrapper');
+            const existingImageSection = document.getElementById(`image-section-${spin.spinID}-for-spin`);
+            if (!existingImageSection) {
+                const imageSection = document.createElement('section');
+                imageSection.setAttribute('class', 'overlay-wrapper');
+                imageSection.id = `image-section-${spin.spinID}-for-spin`;
 
-            const dropDownContainer = document.createElement('div');
-            dropDownContainer.setAttribute('class', 'dropdown');
+                const dropDownContainer = document.createElement('div');
+                dropDownContainer.setAttribute('class', 'dropdown');
 
-            const dropDownContentContainer = document.createElement('div');
-            dropDownContentContainer.setAttribute('class', 'dropdown-content');
+                const dropDownContentContainer = document.createElement('div');
+                dropDownContentContainer.setAttribute('class', 'dropdown-content');
 
-            if (this.profileWebTitles) {
+                if (this.profileWebTitles) {
 
-                if (!Array.isArray(this.profileWebTitles)) {
-                    this.profileWebTitles = [this.profileWebTitles];
+                    if (!Array.isArray(this.profileWebTitles)) {
+                        this.profileWebTitles = [this.profileWebTitles];
+                    }
+
+                    this.profileWebTitles.forEach(web => {
+                        const item = document.createElement('p');
+                        item.textContent = web.webTitle || `Web-${web.webID}`;
+                        dropDownContentContainer.appendChild(item);
+
+                        item.addEventListener('click', () => {
+                            this.webSpinClass.addSpinToWeb(
+                                web.webID,
+                                spin.spinID,
+                                (data) => {
+                                    if (!data || data.hasOwnProperty('error')) {
+                                        new Toast(
+                                            `There was an error adding that Spin to ${item.textContent}. Please try again later`,
+                                            'error'
+                                        );
+                                        return;
+                                    }
+                                    if (data.hasOwnProperty('alert')) {
+                                        new Toast(`Spin already existed in ${item.textContent}`, 'info');
+                                        return;
+                                    }
+
+                                    new Toast(`Successfully added spin to ${item.textContent}`, 'success');
+                                }
+                            )
+                        });
+                    });
                 }
 
-                this.profileWebTitles.forEach(web => {
-                    const item = document.createElement('p');
-                    item.textContent = web.webTitle || `Web-${web.webID}`;
-                    dropDownContentContainer.appendChild(item);
-
-                    item.addEventListener('click', () => {
-                        this.webSpinClass.addSpinToWeb(
-                            web.webID,
-                            spin.spinID,
-                            (data) => {
-                                if (!data || data.hasOwnProperty('error')) {
-                                    new Toast(
-                                        `There was an error adding that Spin to ${item.textContent}. Please try again later`,
-                                        'error'
-                                    );
-                                    return;
-                                }
-                                if (data.hasOwnProperty('alert')) {
-                                    new Toast(`Spin already existed in ${item.textContent}`, 'info');
-                                    return;
-                                }
-
-                                new Toast(`Successfully added spin to ${item.textContent}`, 'success');
-                            }
-                        )
-                    });
-                });
-            }
-
-            const imageButton = document.createElement('button');
-            imageButton.setAttribute('class', 'overlay-button');
-            imageButton.classList.add('hidden');
-            imageButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                const imageButton = document.createElement('button');
+                imageButton.setAttribute('class', 'overlay-button');
+                imageButton.classList.add('hidden');
+                imageButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
                                         <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
                                      </svg>`;
 
-            const image = document.createElement('img')
-            image.src = spin.spinLink;
-            image.alt = spin.spinDescription;
+                const image = document.createElement('img')
+                image.src = spin.spinLink;
+                image.alt = spin.spinDescription;
 
-            image.addEventListener('click', (event) => {
-                router.handleNavigation('/pin', spin);
-            });
+                image.addEventListener('click', (event) => {
+                    router.handleNavigation('/pin', spin);
+                });
 
-            imageSection.addEventListener('mouseover', (event) => {
-                imageButton.classList.remove("hidden");
-            });
+                imageSection.addEventListener('mouseover', (event) => {
+                    imageButton.classList.remove("hidden");
+                });
 
-            imageSection.addEventListener('mouseleave', (event) => {
-                imageButton.classList.add("hidden");
-            });
+                imageSection.addEventListener('mouseleave', (event) => {
+                    imageButton.classList.add("hidden");
+                });
 
-            dropDownContainer.appendChild(imageButton);
-            dropDownContainer.appendChild(dropDownContentContainer);
+                dropDownContainer.appendChild(imageButton);
+                dropDownContainer.appendChild(dropDownContentContainer);
 
-            imageSection.appendChild(image);
-            imageSection.appendChild(dropDownContainer);
+                imageSection.appendChild(image);
+                imageSection.appendChild(dropDownContainer);
 
-            article.appendChild(imageSection);
+                article.appendChild(imageSection);
+            }
         });
     }
 
-    closeModal(modal) {
+    closeModal() {
         const titleInput = document.getElementById("inpTitle");
         const descriptionTextArea = document.getElementById("txtDesc");
         const tagsInput = document.getElementById("inpTag");
@@ -373,6 +400,8 @@ export class MasonryFeed extends HTMLElement {
         uploadIcon.classList.remove("filled");
         imageSpan.textContent = "Select Image";
 
+        document.body.style.cursor = "auto";
+        const modal = document.getElementById('create-image');
         modal.close();
     }
 
@@ -380,12 +409,12 @@ export class MasonryFeed extends HTMLElement {
         const titleInput = document.getElementById("inpTitle");
         const descriptionTextArea = document.getElementById("txtDesc");
         const imageInput = document.getElementById("inpImg");
-        var url = data.result;
-        var link = url.split('?')[0];
-        var id = localStorage.getItem("crawlerID");
-        var desc = descriptionTextArea.value;
-        var title = titleInput.value;
-        var image = imageInput.files[imageInput.files.length-1];
+        let url = data.result;
+        let link = url.split('?')[0];
+        let id = localStorage.getItem("crawlerID");
+        let desc = descriptionTextArea.value;
+        let title = titleInput.value;
+        let image = imageInput.files[imageInput.files.length-1];
 
         await fetch(url, {
             method: "PUT",
@@ -397,8 +426,46 @@ export class MasonryFeed extends HTMLElement {
 
         this.spinClass.createSpin(link, desc, title, id,
             (data) => {
-                const modal = document.getElementById('create-image');
-                this.closeModal(modal);
+                if (!data || data.hasOwnProperty('error')) {
+                    new Toast("There was an error trying to upload that spin, please try again later.", "error");
+                    this.closeModal();
+                    return;
+                }
+                else {
+                    new Toast("Successfully uploaded spin", "success");
+                }
+
+                const tags = this.getExistingTags();
+                if (tags.length !== 0){
+                    this.tagClass.addTags(tags, (data) => {
+                        if (data.hasOwnProperty('error')) {
+                            new Toast("There was an error trying to upload that tag data, please try again later.", "error");
+                        }
+                        else if (data?.hasOwnProperty('alert')) {
+                            new Toast("Some tags were already in the database");
+                        }
+                        else {
+                            new Toast("Successfully uploaded tags", "success");
+                        }
+
+                        this.spinTagClass.addTagsToSpinByTagNames(link, tags,
+                            (data) => {
+                                if (data.hasOwnProperty('error')) {
+                                    new Toast("There was an error trying to associate those tags. Plase try again later.", "error");
+                                }
+                                else {
+                                    new Toast("Successfully uploaded associations", "success");
+                                }
+
+                                this.closeModal();
+                                this.loadProfileWebs();
+                            }
+                        );
+                    });
+                }
+
+                this.closeModal();
+                this.loadProfileWebs();
             }
         )
     }

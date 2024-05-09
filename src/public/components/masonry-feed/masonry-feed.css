@@ -49,8 +49,12 @@ article button {
 }
 
 #create-image{
-    height: 35em;
+    height: 40em;
     overflow-y: auto;
+}
+
+#create-spin-button{
+    margin-bottom: 0.6em;
 }
 
 /*
