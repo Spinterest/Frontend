@@ -142,7 +142,11 @@ export class PinFeed extends HTMLElement {
     }
 
     populateCommentLikes(data) {
-        if (!data || data.hasOwnProperty('error')) {
+        if (!data) {
+            return;
+        }
+
+        if (data.hasOwnProperty('error')) {
             new Toast('Could not load your liked comments.', 'error');
             return;
         }
