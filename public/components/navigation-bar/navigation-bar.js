@@ -6,12 +6,21 @@ export class NavigationBar extends HTMLElement {
 
     constructor() {
         super();
+
     }
 
     connectedCallback() {
         fetch('components/navigation-bar/navigation-bar.html')
             .then(response => response.text())
             .then(html => {
+                if (localStorage.getItem('crawlerID') == null) {
+                    const script = document.createElement('script');
+                    script.src = 'https://accounts.google.com/gsi/client';
+                    script.async = true;
+                    script.defer = true;
+                    this.appendChild(script);
+                }
+
                 this.innerHTML = html;
                 this.addNavigation();
                 this.addButtonEvents();
@@ -130,6 +139,11 @@ export class NavigationBar extends HTMLElement {
             localStorage.removeItem("crawlerUserName");
             profile.classList.add("hidden");
             signIn.classList.remove("hidden");
+            const script = document.createElement('script');
+            script.src = 'https://accounts.google.com/gsi/client';
+            script.async = true;
+            script.defer = true;
+            this.appendChild(script);
         })
     }
 
