@@ -1,0 +1,15 @@
+{
+  "name": "spinterest-frontend",
+  "version": "1.0.0",
+  "description": "Pinterest for spiders",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "author": "spinterest-team",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

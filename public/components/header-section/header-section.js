@@ -9,11 +9,7 @@ export class HeaderSection extends HTMLElement {
             .then(response => response.text())
             .then(html => {
                 this.innerHTML = html;
-                this.addButtonEvents();
             });
     }
 
-    addButtonEvents() {
-
-    }
 }
