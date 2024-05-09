@@ -1,4 +1,4 @@
-const localBaseURL = "http://spinback.eu-west-1.elasticbeanstalk.com";
+const localBaseURL = "http://localhost:8080";
 
 const callTypes = {
     get: "GET",

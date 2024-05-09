@@ -14,6 +14,13 @@ export class Router {
         });
 
         document.addEventListener('DOMContentLoaded', () => {
+            const route = sessionStorage.getItem('route');
+            const data = sessionStorage.getItem('data');
+            if (route) {
+                this.handleNavigation(route, JSON.parse(data))
+                return
+            }
+
             this.handleNavigation(window.location.pathname);
         });
     }
@@ -31,6 +38,7 @@ export class Router {
                 if (!response.ok) {
                     throw new Error('Failed to fetch HTML file');
                 }
+                sessionStorage.setItem('route', route)
                 return response.text();
             })
             .then(html => {
@@ -43,7 +51,12 @@ export class Router {
     }
 
     handleNavigation(path = '/', data = null) {
+        if (data != null) {
+            sessionStorage.setItem('data', JSON.stringify(data));
+        }
+
         history.pushState(data, null, path);
+
         this.loadContent(path);
     }
 
