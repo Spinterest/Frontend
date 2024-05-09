@@ -94,9 +94,10 @@ nav h1 {
   display: none;
   position: absolute;
   background-color: var(--primary-bg-color);
-  min-width: 10em;
-  box-shadow: 0em 0.6em 1em 0em rgba(0,0,0,0.2);
+  box-shadow: 0 0.6em 1em 0 rgba(0,0,0,0.2);
   z-index: 1;
+  border-radius: 1em;
+  min-width: fit-content;
 }
 
 .dropdown-content p {
@@ -109,7 +110,10 @@ nav h1 {
     cursor: pointer;
 }
 
-.dropdown-content p:hover {background-color: var(--secondary-bg-color);}
+.dropdown-content p:hover {
+    background-color: var(--secondary-bg-color);
+    border-radius: 1em;
+}
 
 .dropdown:hover .dropdown-content {display: block;}
 
