@@ -9,7 +9,7 @@ variable "common_tags" {
 variable "region" {
   type        = string
   description = "The region where the resources will be deployed."
-  default     = "eu-wesr-1"
+  default     = "eu-west-1"
 }
 
 variable "vpc_cidr" {
