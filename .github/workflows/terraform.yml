@@ -32,12 +32,12 @@ jobs:
     
     - name: Terraform Init
       run: terraform init
-      working-directory: Spintrest-Backend
+      working-directory: terraform
       
     - name: Terraform Validate
       run: terraform validate
-      working-directory: Spintrest-Backend
+      working-directory: terraform
       
     - name: Terraform Apply
       run: terraform apply -auto-approve
-      working-directory: Spintrest-Backend
+      working-directory: terraform
