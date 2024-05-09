@@ -1,5 +1,3 @@
-import {Toast} from "./Toast.js";
-
 export class Router {
 
     routes = {
