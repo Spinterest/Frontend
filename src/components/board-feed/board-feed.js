@@ -21,7 +21,7 @@ export class BoardFeed extends HTMLElement {
                     return;
                 }
 
-                new Toast('Error Loading Page - Boards: User does not seem to be logged In.', 'error');
+                new Toast('Please Log In To Use This Feature', 'error');
                 new Router().handleNavigation('/');
             });
     }

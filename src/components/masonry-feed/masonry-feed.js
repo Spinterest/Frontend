@@ -102,7 +102,7 @@ export class MasonryFeed extends HTMLElement {
                 );
                 return;
             }
-            new Toast('Error Loading Page - My Spins: User does not seem to be logged In.', 'error');
+            new Toast('Please Log In To Use This Feature', 'error');
             new Router().handleNavigation('/');
             return;
         }

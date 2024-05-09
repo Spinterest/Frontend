@@ -37,7 +37,7 @@ export class PinFeed extends HTMLElement {
                     return;
                 }
 
-                new Toast('Error Loading Page - Pin: User does not seem to be logged In.', 'error');
+                new Toast('Please Log In To Use This Feature', 'error');
                 new Router().handleNavigation('/');
             });
     }
@@ -73,7 +73,7 @@ export class PinFeed extends HTMLElement {
         span.textContent = data.length
 
         // see if the current user liked the image:
-        if (data.find(crawler => crawler.crawlerID === this.crawlerID)) {
+        if (data.find(crawler => crawler.crawlerID == this.crawlerID)) {
             const likeButton = this.querySelector('.like-image-button');
             likeButton.classList.add('active-like');
         }
@@ -294,7 +294,7 @@ export class PinFeed extends HTMLElement {
                 }
 
                 event.classList.add('active-like');
-                new Toast('Successfully like comment.', 'success');
+                new Toast('Successfully liked comment.', 'success');
                 const commentCountSpan = document.getElementById(`comment-like-count-${comment.spinCommentID}`);
                 commentCountSpan.textContent = `${Number(commentCountSpan.textContent) + 1}`;
             }
@@ -347,12 +347,12 @@ export class PinFeed extends HTMLElement {
                 }
 
                 if (data.hasOwnProperty('alert')) {
-                    new Toast('This spin was already like.', 'info');
+                    new Toast('This spin was already liked.', 'info');
                     return;
                 }
 
                 likeButton.classList.add('active-like');
-                new Toast('Successfully like spin.', 'success');
+                new Toast('Successfully liked spin.', 'success');
 
                 const likeCountSpan = this.querySelector('.like-image-button > span');
                 likeCountSpan.textContent = `${Number(likeCountSpan.textContent) + 1}`;
