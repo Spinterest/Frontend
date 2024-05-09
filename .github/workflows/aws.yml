@@ -31,7 +31,7 @@ jobs:
 
 
       - name: Upload artifact to S3
-        run: aws s3 cp spinterestfront.zip s3://${{ secrets.BUCKET_NAME }}/application-${{ github.run_id }}.zip
+        run: aws s3 cp spinterestfront.zip s3://${{ secrets.BUCKET_NAME }}/spinterestfront-${{ github.run_id }}.zip
 
   deploy:
     runs-on: ubuntu-latest
