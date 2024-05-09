@@ -27,11 +27,12 @@ jobs:
           aws-region: eu-west-1
 
       - name: Package artifact
-        run: zip -r spinterestfront.zip *
-
+        run: zip -r spinterestfront.zip .
+        working-directory: FrontEnd
 
       - name: Upload artifact to S3
-        run: aws s3 cp spinterestfront.zip s3://${{ secrets.BUCKET_NAME }}/spinterestfront-${{ github.run_id }}.zip
+        run: aws s3 cp spinterestfront.zip s3://${{ secrets.BUCKET_NAME }}/spinFront-${{ github.run_id }}.zip
+        working-directory: FrontEnd
 
   deploy:
     runs-on: ubuntu-latest
@@ -44,28 +45,8 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           role-session-name: spinterest-build-${{ github.run_id }}
           aws-region: eu-west-1
-          
-      - name: Checkout Source
-        uses: actions/checkout@v4
-        
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          
-      - name: Install Dependencies
-        run: npm install
-        
-      - name: Genrate Deployment Package
-        run: zip -r nodejs-app-build.zip *
-        
-      - name: Deploy to EB
-        uses: einaregilsson/beanstalk-deploy@v21
-        with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} 
-          application_name: ${{ secrets.FRONTEND_APP_NAME }}
-          environment_name: ${{ secrets.FRONTEND_ENV_NAME }}
-          version_label: ${{ github.run_id }}
-          region: eu-west-1
-          deployment_package: nodejs-app-build.zip
+
+      - name: Deploy to Elastic Beanstalk
+        run: |
+          aws elasticbeanstalk create-application-version --application-name ${{ secrets.FRONTEND_APP_NAME }} --version-label ${{ github.run_id }} --source-bundle S3Bucket="${{ secrets.BUCKET_NAME }}",S3Key="spinFront-${{ github.run_id }}.zip"
+          aws elasticbeanstalk update-environment --application-name ${{ secrets.FRONTEND_APP_NAME }} --environment-name ${{ secrets.FRONTEND_ENV_NAME }} --version-label ${{ github.run_id }}
