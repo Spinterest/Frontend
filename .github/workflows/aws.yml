@@ -64,5 +64,6 @@ jobs:
         with:
           application_name: ${{ secrets.FRONTEND_APP_NAME }}
           environment_name: ${{ secrets.FRONTEND_ENV_NAME }}
+          aws-region: eu-west-1
           version_label: ${{ github.run_id }}
           deployment_package: nodejs-app-build.zip
