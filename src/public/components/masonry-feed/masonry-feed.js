@@ -55,6 +55,52 @@ export class MasonryFeed extends HTMLElement {
             document.body.style.cursor = "wait";
             this.complexClass.getNewSpinLink(this.createSpin.bind(this));
         }
+
+        this.addTagButtonClick = (event) => {
+            event.preventDefault();
+
+            const tagOverFlow = document.getElementById("tag-overflow-area");
+            const tagsInput = document.getElementById("inpTag");
+
+            if (tagsInput.value.length === 0) {
+                new Toast(`Enter text to add tag`, 'error');
+                return
+            }
+
+            const existingTagOverflowSection = document.getElementById(`tag-overflow-section-${tagsInput.value.toLowerCase()}`);
+            if (!existingTagOverflowSection) {
+                const tagOverflowSection = document.createElement("section");
+                tagOverflowSection.id = `tag-overflow-section-${tagsInput.value.toLowerCase()}`;
+                tagOverflowSection.classList.add("overlay-wrapper");
+                tagOverflowSection.classList.add("overlay-wrapper-tag-button");
+
+                const tagButton = document.createElement("button");
+                tagButton.classList.add("tag-button");
+                tagButton.textContent = tagsInput.value.toLowerCase();
+                tagsInput.value = '';
+                tagButton.id = 'tag-overflow-section-button';
+
+                const tagButtonDelete = document.createElement("button");
+                tagButtonDelete.classList.add("tag-button-delete");
+                tagButtonDelete.textContent = 'X';
+
+                tagOverflowSection.appendChild(tagButton);
+                tagOverflowSection.appendChild(tagButtonDelete);
+                tagOverFlow.appendChild(tagOverflowSection);
+
+                tagButtonDelete.addEventListener('click', (event) => {
+                    tagOverFlow.removeChild(tagOverflowSection);
+                });
+
+                tagButton.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                })
+            } else {
+                const tagButton = existingTagOverflowSection.querySelector("#tag-overflow-section-button");
+                new Toast(`You have already added tag: ${tagButton.textContent}`, 'info');
+            }
+        }
     }
 
     connectedCallback() {
@@ -227,51 +273,8 @@ export class MasonryFeed extends HTMLElement {
             const tagOverFlow = document.getElementById("tag-overflow-area");
 
             const addTagButton = document.getElementById("add-tag-button");
-            addTagButton.addEventListener("click",
-                (event) => {
-                    event.preventDefault();
-
-                    if (tagsInput.value.length === 0) {
-                        new Toast(`Enter text to add tag`, 'error');
-                        return
-                    }
-
-                    const existingTagOverflowSection = document.getElementById(`tag-overflow-section-${tagsInput.value.toLowerCase()}`);
-                    if (!existingTagOverflowSection) {
-                        const tagOverflowSection = document.createElement("section");
-                        tagOverflowSection.id = `tag-overflow-section-${tagsInput.value.toLowerCase()}`;
-                        tagOverflowSection.classList.add("overlay-wrapper");
-                        tagOverflowSection.classList.add("overlay-wrapper-tag-button");
-
-                        const tagButton = document.createElement("button");
-                        tagButton.classList.add("tag-button");
-                        tagButton.textContent = tagsInput.value.toLowerCase();
-                        tagsInput.value = '';
-                        tagButton.id = 'tag-overflow-section-button';
-
-                        const tagButtonDelete = document.createElement("button");
-                        tagButtonDelete.classList.add("tag-button-delete");
-                        tagButtonDelete.textContent = 'X';
-
-                        tagOverflowSection.appendChild(tagButton);
-                        tagOverflowSection.appendChild(tagButtonDelete);
-                        tagOverFlow.appendChild(tagOverflowSection);
-
-                        tagButtonDelete.addEventListener('click', (event) => {
-                            tagOverFlow.removeChild(tagOverflowSection);
-                        });
-
-                        tagButton.addEventListener('click', (event) => {
-                            event.preventDefault();
-                            event.stopPropagation();
-                        })
-                    } else {
-                        const tagButton = existingTagOverflowSection.querySelector("#tag-overflow-section-button");
-                        new Toast(`You have already added tag: ${tagButton.textContent}`, 'info');
-                    }
-                }
-            );
-
+            addTagButton.removeEventListener("click",this.addTagButtonClick);
+            addTagButton.addEventListener("click",this.addTagButtonClick);
 
             tagsInput.removeEventListener('focusin', this.tagDropDownPopulate);
             tagsInput.addEventListener('focusin', this.tagDropDownPopulate);
