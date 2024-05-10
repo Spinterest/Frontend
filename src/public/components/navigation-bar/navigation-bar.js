@@ -1,5 +1,6 @@
 import {Router} from "../../js/Router.js";
 import {AutherController, CrawlerController} from "../../js/API.js";
+import {Toast} from "../../js/Toast.js";
 
 
 export class NavigationBar extends HTMLElement {
@@ -64,16 +65,12 @@ export class NavigationBar extends HTMLElement {
         const imgSpider = document.getElementById("imgSpider");
         const btnEditProfile = document.getElementById("btnEditProfile");
 
-        const labelUpdateUsernameError = document.getElementById("labelUpdateUsernameError");
         const inpUsername = document.getElementById("inpUsername");
         const modalEditProfile = document.getElementById("modelEditProfile");
         const btnUpdateUsername = document.getElementById("btnUpdateUsername");
         const btnCloseUpdateUsername = document.getElementById("btnCloseUpdateUsername");
         const btnSignOut = document.getElementById("btnSignOut");
-        const profile = document.getElementById("profile");
         const btnSignIn = document.getElementById("sign-in");
-
-        labelUpdateUsernameError.style.display = 'none';
 
         function home(){
             btnHome.classList.add('active');
@@ -104,49 +101,37 @@ export class NavigationBar extends HTMLElement {
 
         function closeModal(){
             inpUsername.value = '';
-            labelUpdateUsernameError.style.display = 'none';
-
             modalEditProfile.close();
         }
 
         btnEditProfile.addEventListener('click', () => {modalEditProfile.showModal();});
         btnCloseUpdateUsername.addEventListener("click", closeModal.bind(this));
 
-        btnUpdateUsername.addEventListener(
-            'click',
-            (event) => {
-                event.preventDefault();
+        modalEditProfile.addEventListener('submit', (event) => {
+            event.preventDefault();
 
-                // Todo, can use email or ID, add proper one though
-                const crawlerController = new CrawlerController();
+            const crawlerController = new CrawlerController();
+            const crawlerID = parseInt(localStorage.getItem("crawlerID"));
 
-                const crawlerID = 3
-                // const crawlerEmail = "katlego.kungoane@bbd.co.za"
-
-                // crawlerController.editCrawlerNameWithEmail(crawlerEmail, callBack);
-                crawlerController.editCrawlerNameWithID(
-                    crawlerID,
-                    inpUsername.value,
-                    (data) => {
-                        // Todo, maybe add red glow on button for error
-                        // The update didnt happen
-                        if (data.hasOwnProperty('alert')){
-                            labelUpdateUsernameError.textContent = data.alert;
-                            labelUpdateUsernameError.style.display = 'inherit';
-                            return;
-                        }
-
-                        if (!data || data.crawlerUserName !== inpUsername.value){
-                            labelUpdateUsernameError.style.display = 'inherit';
-                            return;
-                        }
-
-                        // Todo, maybe add a successful animation
-                        closeModal();
+            crawlerController.editCrawlerNameWithID(
+                crawlerID,
+                inpUsername.value,
+                (data) => {
+                    if (!data || data.hasOwnProperty('error')){
+                        new Toast("There was an issue trying to change your username. Please try again later", "error");
+                        return;
                     }
-                )
-            }
-        )
+
+                    if (data.hasOwnProperty('alert')){
+                        new Toast(`Username (${inpUsername.value}) is in use.`, "error");
+                        return;
+                    }
+
+                    new Toast(`You have successfully changed your username to ${inpUsername.value}`, "success");
+                    closeModal();
+                }
+            )
+        });
 
         btnSignOut.addEventListener("click", () => {
             localStorage.removeItem("crawlerID");
