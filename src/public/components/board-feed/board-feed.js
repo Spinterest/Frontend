@@ -67,6 +67,8 @@ export class BoardFeed extends HTMLElement {
                         return;
                     }
 
+                    new Toast("Successfully created Web", "success");
+
                     closePopup();
                     this.getData();
                 }
