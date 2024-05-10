@@ -22,3 +22,9 @@ article h4{
     object-fit: cover;
     border-radius: 0.5em;
 }
+
+.web-text-cutter{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

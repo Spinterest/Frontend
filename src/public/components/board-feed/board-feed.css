@@ -40,3 +40,7 @@ span{
     display: flex;
 }
 
+.board-card-container{
+    width: 12em;
+}
+

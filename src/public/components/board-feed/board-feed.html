@@ -20,15 +20,12 @@
         <h2>Create Web</h2>
         <section class="underline"></section>
         <br>
-        <form method="dialog">
-            <input type="text" placeholder="Title" id="inpBoardTitle" class="formInput">
+        <form method="dialog" id="form-create-web">
+            <input type="text" placeholder="Title" id="inpBoardTitle" class="formInput" name="inpBoardTitle" required>
             <br>
             <textarea name="description" id="txtBoardDesc" class="formTextArea" placeholder="Description"></textarea>
             <br>
             <button id="btnCreate">Create</button>
         </form>
-        <label class="formInput" id="labelCreateWebError">
-            There was an error. Please try again later.
-        </label>
     </section>
 </dialog>

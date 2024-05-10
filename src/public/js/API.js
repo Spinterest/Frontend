@@ -317,8 +317,8 @@ export class SpinController {
             callback,
             {
                 spinLink: spinLink,
-                spinDescription: spinDescription,
-                spinTitle: spinTitle,
+                spinDescription: spinDescription ?? '',
+                spinTitle: spinTitle ?? '',
                 crawlerID: crawlerID
             }
         );
@@ -417,6 +417,18 @@ export class SpinTagsController {
             }
         );
     };
+
+    addTagsToSpinByTagNames(spinLink, tagNames, callback){
+        apiCallBuilder(
+            `${localBaseURL}/${this.baseURL}/addTagsToSpinByTagNames`,
+            callTypes.post,
+            callback,
+            {
+                spinLink: spinLink,
+                tagNames: tagNames,
+            }
+        );
+    }
 }
 
 export class TagController {
@@ -432,12 +444,12 @@ export class TagController {
         );
     };
 
-    addTag(tagName, callback){
+    addTags(tagNames, callback){
         apiCallBuilder(
             `${localBaseURL}/${this.baseURL}/createTag`,
             callTypes.post,
             callback,
-            {tagName: tagName}
+            {tagNames: tagNames}
         );
     };
 
@@ -481,14 +493,15 @@ export class WebController{
             callTypes.post,
             callback,
             {
-                webDescription: webDescription,
-                webTitle: webTitle,
+                webDescription: webDescription ?? '',
+                webTitle: webTitle ?? '',
                 crawlerID: crawlerID
             }
         );
     };
 
     getUserWebsWithUserID(crawlerID, callback){
+        crawlerID = crawlerID ?? -1;
         apiCallBuilder(
             `${localBaseURL}/${this.baseURL}/crawlerID/${crawlerID}`,
             callTypes.get,
@@ -551,6 +564,34 @@ export class WebSpinsController {
             }
         );
     };
+}
+
+export class AutherController{
+    constructor() {
+        this.baseURL = "auth";
+    }
+
+    getCode(
+        callback
+    ){
+        apiCallBuilder(
+            `${localBaseURL}/${this.baseURL}/getCode`,
+            callTypes.get,
+            callback
+        )
+    }
+
+    getAccessToken(
+        code,
+        callback
+    ){
+        apiCallBuilder(
+            `${localBaseURL}/${this.baseURL}/getAccessToken`,
+            callTypes.post,
+            callback,
+            {code: code}
+        )
+    }
 }
 
 export const apiCallBuilder = async (

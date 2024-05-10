@@ -49,15 +49,16 @@
 
 
         <li id="sign-in">
-            <div id="g_id_onload"
-                data-client_id="938276127101-roljisla2hu5nta50tv888bmj1b2ci95.apps.googleusercontent.com"
-                data-callback="handleCredentialResponse">
-            </div>
-            <div class="g_id_signin" data-type="standard" data-theme="filled_black"></div>
+            <button id="btnSignIn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                </svg>
+                <span>Sign In</span>
+            </button>
         </li>
 
-        <li class="hidden" id="profile">
-            <!--            TODO: Popup Modal With User Profile dropdown -->
+        <li id="profile">
             <div class="dropdown">
                 <button id="btnProfile">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -85,14 +86,11 @@
         <section class="underline"></section>
         <br>
         <form method="dialog">
-            <input class="formInput" type="text" maxlength="50" placeholder="username" id="inpUsername"/>
+            <input class="formInput" type="text" maxlength="50" placeholder="username" id="inpUsername" required/>
             <br>
             <button id="btnUpdateUsername">
                 Update Username
             </button>
         </form>
-        <label class="formInput" id="labelUpdateUsernameError" for="inpUsername">
-            There was an error. Please try again later.
-        </label>
     </section>
 </dialog>

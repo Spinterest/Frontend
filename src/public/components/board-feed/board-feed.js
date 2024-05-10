@@ -32,18 +32,15 @@ export class BoardFeed extends HTMLElement {
     }
 
     addButtonEvents() {
-
         const createBoardPopup = document.getElementById('create-board');
         const titleInput = document.getElementById("inpBoardTitle");
         const descriptionTextArea = document.getElementById("txtBoardDesc");
-        const labelCreateWebError = document.getElementById("labelCreateWebError");
-        labelCreateWebError.style.display = 'none';
+        const formCreateWeb = document.getElementById("form-create-web");
 
         function closePopup() {
             createBoardPopup.close();
             titleInput.value = "";
             descriptionTextArea.value = "";
-            labelCreateWebError.style.display = 'none';
         }
 
         const showCreateBoardButton = document.getElementById('create-card');
@@ -51,15 +48,8 @@ export class BoardFeed extends HTMLElement {
             createBoardPopup.showModal();
         });
 
-        const createBoardButton = document.getElementById('btnCreate');
-        createBoardButton.addEventListener('click', (event) => {
+        formCreateWeb.addEventListener('submit', (event) => {
             event.preventDefault();
-
-            // validation
-            if (titleInput.value === '') {
-                new Toast('Title cannot be empty.','error')
-                return;
-            }
 
             const webController = new WebController();
             webController.createWeb(
@@ -67,17 +57,17 @@ export class BoardFeed extends HTMLElement {
                 descriptionTextArea.value,
                 titleInput.value,
                 (data) => {
-                    // The update didnt happen
                     if (!data || data.hasOwnProperty('error')) {
-                        labelCreateWebError.style.display = 'inherit';
+                        new Toast("There was an error trying to make that Web. Please try again later", "error");
                         return;
                     }
 
                     if (data.hasOwnProperty('alert')) {
-                        labelCreateWebError.textContent = data.alert;
-                        labelCreateWebError.style.display = 'inherit';
+                        new Toast(data.alert, "info");
                         return;
                     }
+
+                    new Toast("Successfully created Web", "success");
 
                     closePopup();
                     this.getData();
@@ -113,6 +103,7 @@ export class BoardFeed extends HTMLElement {
             const existingBoardCard = document.getElementById(`$board-card-${web.webID}`);
             if (!existingBoardCard) {
                 const boardCard = document.createElement('board-card');
+                boardCard.setAttribute('class', 'board-card-container');
                 boardCard.id = `$board-card-${web.webID}`;
                 boardCard.webID = web.webID;
                 boardCard.webTitle = web.webTitle;

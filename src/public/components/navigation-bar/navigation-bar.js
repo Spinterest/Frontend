@@ -1,5 +1,6 @@
 import {Router} from "../../js/Router.js";
-import {CrawlerController} from "../../js/API.js";
+import {AutherController, CrawlerController} from "../../js/API.js";
+import {Toast} from "../../js/Toast.js";
 
 
 export class NavigationBar extends HTMLElement {
@@ -9,19 +10,35 @@ export class NavigationBar extends HTMLElement {
 
     }
 
+    static hideLogin(){
+        document.getElementById("profile").classList.add("hidden");
+        document.getElementById("profile").classList.remove("visible");
+
+        document.getElementById("sign-in").classList.add("visible");
+        document.getElementById("sign-in").classList.remove("hidden");
+    }
+
+    static hideSignUp(){
+        document.getElementById("sign-in").classList.add("hidden");
+        document.getElementById("sign-in").classList.remove("visible");
+
+        document.getElementById("profile").classList.add("visible");
+        document.getElementById("profile").classList.remove("hidden");
+    }
+
     connectedCallback() {
         fetch('components/navigation-bar/navigation-bar.html')
             .then(response => response.text())
             .then(html => {
-                if (localStorage.getItem('crawlerID') == null) {
-                    const script = document.createElement('script');
-                    script.src = 'https://accounts.google.com/gsi/client';
-                    script.async = true;
-                    script.defer = true;
-                    this.appendChild(script);
+                this.innerHTML = html;
+
+                if (!localStorage.getItem('access_token')) {
+                    NavigationBar.hideLogin();
+                }
+                else {
+                    NavigationBar.hideSignUp();
                 }
 
-                this.innerHTML = html;
                 this.addNavigation();
                 this.addButtonEvents();
                 this.populateBar();
@@ -48,16 +65,12 @@ export class NavigationBar extends HTMLElement {
         const imgSpider = document.getElementById("imgSpider");
         const btnEditProfile = document.getElementById("btnEditProfile");
 
-        const labelUpdateUsernameError = document.getElementById("labelUpdateUsernameError");
         const inpUsername = document.getElementById("inpUsername");
         const modalEditProfile = document.getElementById("modelEditProfile");
         const btnUpdateUsername = document.getElementById("btnUpdateUsername");
         const btnCloseUpdateUsername = document.getElementById("btnCloseUpdateUsername");
         const btnSignOut = document.getElementById("btnSignOut");
-        const profile = document.getElementById("profile");
-        const signIn = document.getElementById("sign-in");
-
-        labelUpdateUsernameError.style.display = 'none';
+        const btnSignIn = document.getElementById("sign-in");
 
         function home(){
             btnHome.classList.add('active');
@@ -88,74 +101,62 @@ export class NavigationBar extends HTMLElement {
 
         function closeModal(){
             inpUsername.value = '';
-            labelUpdateUsernameError.style.display = 'none';
-
             modalEditProfile.close();
         }
 
         btnEditProfile.addEventListener('click', () => {modalEditProfile.showModal();});
         btnCloseUpdateUsername.addEventListener("click", closeModal.bind(this));
 
-        btnUpdateUsername.addEventListener(
-            'click',
-            (event) => {
-                event.preventDefault();
+        modalEditProfile.addEventListener('submit', (event) => {
+            event.preventDefault();
 
-                // Todo, can use email or ID, add proper one though
-                const crawlerController = new CrawlerController();
+            const crawlerController = new CrawlerController();
+            const crawlerID = parseInt(localStorage.getItem("crawlerID"));
 
-                const crawlerID = 3
-                // const crawlerEmail = "katlego.kungoane@bbd.co.za"
-
-                // crawlerController.editCrawlerNameWithEmail(crawlerEmail, callBack);
-                crawlerController.editCrawlerNameWithID(
-                    crawlerID,
-                    inpUsername.value,
-                    (data) => {
-                        // Todo, maybe add red glow on button for error
-                        // The update didnt happen
-                        if (data.hasOwnProperty('alert')){
-                            labelUpdateUsernameError.textContent = data.alert;
-                            labelUpdateUsernameError.style.display = 'inherit';
-                            return;
-                        }
-
-                        if (!data || data.crawlerUserName !== inpUsername.value){
-                            labelUpdateUsernameError.style.display = 'inherit';
-                            return;
-                        }
-
-                        // Todo, maybe add a successful animation
-                        closeModal();
+            crawlerController.editCrawlerNameWithID(
+                crawlerID,
+                inpUsername.value,
+                (data) => {
+                    if (!data || data.hasOwnProperty('error')){
+                        new Toast("There was an issue trying to change your username. Please try again later", "error");
+                        return;
                     }
-                )
-            }
-        )
+
+                    if (data.hasOwnProperty('alert')){
+                        new Toast(`Username (${inpUsername.value}) is in use.`, "error");
+                        return;
+                    }
+
+                    new Toast(`You have successfully changed your username to ${inpUsername.value}`, "success");
+                    closeModal();
+                }
+            )
+        });
 
         btnSignOut.addEventListener("click", () => {
             localStorage.removeItem("crawlerID");
             localStorage.removeItem("crawlerEmail");
-            localStorage.removeItem("crawlerToken");
             localStorage.removeItem("crawlerUserName");
-            profile.classList.add("hidden");
-            signIn.classList.remove("hidden");
-            const script = document.createElement('script');
-            script.src = 'https://accounts.google.com/gsi/client';
-            script.async = true;
-            script.defer = true;
-            this.appendChild(script);
-        })
+            localStorage.removeItem("access_token");
+            localStorage.removeItem("refresh_token");
+
+            NavigationBar.hideLogin();
+        });
+
+        btnSignIn.addEventListener('click', () => {
+            const autherController = new AutherController();
+            autherController.getCode((redirect) => {
+                window.location.href = redirect.url;
+            });
+        });
     }
 
     populateBar(){
-        const profile = document.getElementById("profile");
-        const signIn = document.getElementById("sign-in")
-        if (localStorage.getItem("crawlerID")==null){
-            profile.classList.add("hidden");
-            signIn.classList.remove("hidden");
-        } else {
-            signIn.classList.add("hidden");
-            profile.classList.remove("hidden");
+        if (!localStorage.getItem("access_token")){
+            NavigationBar.hideLogin();
+            return;
         }
+
+        NavigationBar.hideSignUp();
     }
 }
