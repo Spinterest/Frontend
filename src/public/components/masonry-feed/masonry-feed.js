@@ -24,6 +24,37 @@ export class MasonryFeed extends HTMLElement {
         this.spinTagClass = new SpinTagsController();
 
         this.crawlerID = localStorage.getItem("crawlerID")
+
+        this.tagDropDownPopulate = () => {
+            const tagsInput = document.getElementById("inpTag");
+
+            if (tagsInput.value === '') {
+                this.complexClass.getTopTags(
+                    this.populateTagDropDown.bind(this),
+                    this.getExistingTags()
+                );
+                return;
+            }
+
+            this.tagClass.filterTags(
+                tagsInput.value,
+                this.getExistingTags(),
+                this.populateTagDropDown.bind(this)
+            );
+        }
+
+        this.submitSpin = (event) => {
+            const inputImage = document.getElementById('inpImg');
+            if (inputImage.files.length === 0){
+                new Toast("Please enter a file to upload a spin", "error");
+                event.preventDefault();
+                return;
+            }
+
+            new Toast("Uploading Spin", "info");
+            document.body.style.cursor = "wait";
+            this.complexClass.getNewSpinLink(this.createSpin.bind(this));
+        }
     }
 
     connectedCallback() {
@@ -145,37 +176,6 @@ export class MasonryFeed extends HTMLElement {
                 tagInput.focus();
             });
         });
-    }
-
-    tagDropDownPopulate(){
-        const tagsInput = document.getElementById("inpTag");
-
-        if (tagsInput.value === '') {
-            this.complexClass.getTopTags(
-                this.populateTagDropDown.bind(this),
-                this.getExistingTags()
-            );
-            return;
-        }
-
-        this.tagClass.filterTags(
-            tagsInput.value,
-            this.getExistingTags(),
-            this.populateTagDropDown.bind(this)
-        );
-    }
-
-    submitSpin(event){
-        const inputImage = document.getElementById('inpImg');
-        if (inputImage.files.length === 0){
-            new Toast("Please enter a file to upload a spin", "error");
-            event.preventDefault();
-            return;
-        }
-
-        new Toast("Uploading Spin", "info");
-        document.body.style.cursor = "wait";
-        this.complexClass.getNewSpinLink(this.createSpin.bind(this));
     }
 
     // TODO: Infinity Scroll
