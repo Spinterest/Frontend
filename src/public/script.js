@@ -17,55 +17,38 @@ customElements.define('header-section', HeaderSection);
 
 const router = new Router();
 
-function decodeJwtResponse(token) {
-    let base64Url = token.split(".")[1];
-    let base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-    let jsonPayload = decodeURIComponent(
-    atob(base64)
-        .split("")
-        .map(function (c) {
-        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-        })
-        .join("")
-    );
-    return JSON.parse(jsonPayload);
-}
-
-window.handleCredentialResponse = (response) => {
-    const responsePayload = decodeJwtResponse(response.credential);
-    const crawlerController = new CrawlerController();
-    crawlerController.login(responsePayload.email, (data) => {
-        if (data!=null){
-            localStorage.setItem('crawlerID',data.crawlerID);
-            localStorage.setItem('crawlerEmail',data.crawlerEmail);
-            localStorage.setItem('crawlerUserName',data.crawlerUserName);
-            localStorage.setItem('crawlerToken',responsePayload.jti);
-
-            const autherController = new AutherController();
-            autherController.getCode((redirect) => {
-                window.location.href = redirect.url;
-            });
-
-            router.handleNavigation('/');
-        }
-    });
-
-    const btnSignIn = document.getElementById("sign-in");
-    btnSignIn.classList.add("hidden");
-
-    const profile = document.getElementById("profile");
-    profile.classList.remove("hidden");
-}
-
 const urlParams = new URLSearchParams(window.location.search);
 const code = urlParams.get("code");
 
 if (code && !localStorage.getItem("access_token")) {
     const autherController = new AutherController();
     autherController.getAccessToken(code, (data) => {
+        // Take Tokens
         localStorage.setItem('access_token', data.access_token);
         localStorage.setItem('refresh_token', data.refresh_token);
-        new Toast("You are now logged in", "success");
+
+        // Get mail and all
+        fetch(`https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${data.access_token}`)
+            .then((response) => {
+                response.json().then((response) => {
+                    const crawlerEmail = response.email;
+
+                    const crawlerController = new CrawlerController();
+                    crawlerController.login(crawlerEmail, (crawlerData) => {
+                        localStorage.removeItem("crawlerID");
+                        localStorage.removeItem("crawlerEmail");
+                        localStorage.removeItem("crawlerUserName");
+
+                        localStorage.setItem('crawlerID', crawlerData.crawlerID);
+                        localStorage.setItem('crawlerEmail', crawlerData.crawlerEmail);
+                        localStorage.setItem('crawlerUserName', crawlerData.crawlerUserName);
+
+                        NavigationBar.hideSignUp();
+
+                        new Toast("You are now logged in", "success");
+                    });
+                });
+            });
     });
 }
 

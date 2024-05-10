@@ -127,6 +127,11 @@ label span {
     display: none;
 }
 
+.visible {
+    visibility: visible;
+    display: flex;
+}
+
 @media only screen and (orientation: portrait) {
     pin-feed {
         width: 100%;

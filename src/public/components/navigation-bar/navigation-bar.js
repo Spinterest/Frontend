@@ -1,5 +1,5 @@
 import {Router} from "../../js/Router.js";
-import {CrawlerController} from "../../js/API.js";
+import {AutherController, CrawlerController} from "../../js/API.js";
 
 
 export class NavigationBar extends HTMLElement {
@@ -9,19 +9,35 @@ export class NavigationBar extends HTMLElement {
 
     }
 
+    static hideLogin(){
+        document.getElementById("profile").classList.add("hidden");
+        document.getElementById("profile").classList.remove("visible");
+
+        document.getElementById("sign-in").classList.add("visible");
+        document.getElementById("sign-in").classList.remove("hidden");
+    }
+
+    static hideSignUp(){
+        document.getElementById("sign-in").classList.add("hidden");
+        document.getElementById("sign-in").classList.remove("visible");
+
+        document.getElementById("profile").classList.add("visible");
+        document.getElementById("profile").classList.remove("hidden");
+    }
+
     connectedCallback() {
         fetch('components/navigation-bar/navigation-bar.html')
             .then(response => response.text())
             .then(html => {
-                if (localStorage.getItem('crawlerID') == null) {
-                    const script = document.createElement('script');
-                    script.src = 'https://accounts.google.com/gsi/client';
-                    script.async = true;
-                    script.defer = true;
-                    this.appendChild(script);
+                this.innerHTML = html;
+
+                if (!localStorage.getItem('access_token')) {
+                    NavigationBar.hideLogin();
+                }
+                else {
+                    NavigationBar.hideSignUp();
                 }
 
-                this.innerHTML = html;
                 this.addNavigation();
                 this.addButtonEvents();
                 this.populateBar();
@@ -55,7 +71,7 @@ export class NavigationBar extends HTMLElement {
         const btnCloseUpdateUsername = document.getElementById("btnCloseUpdateUsername");
         const btnSignOut = document.getElementById("btnSignOut");
         const profile = document.getElementById("profile");
-        const signIn = document.getElementById("sign-in");
+        const btnSignIn = document.getElementById("sign-in");
 
         labelUpdateUsernameError.style.display = 'none';
 
@@ -135,29 +151,27 @@ export class NavigationBar extends HTMLElement {
         btnSignOut.addEventListener("click", () => {
             localStorage.removeItem("crawlerID");
             localStorage.removeItem("crawlerEmail");
-            localStorage.removeItem("crawlerToken");
             localStorage.removeItem("crawlerUserName");
             localStorage.removeItem("access_token");
             localStorage.removeItem("refresh_token");
-            profile.classList.add("hidden");
-            signIn.classList.remove("hidden");
-            const script = document.createElement('script');
-            script.src = 'https://accounts.google.com/gsi/client';
-            script.async = true;
-            script.defer = true;
-            this.appendChild(script);
-        })
+
+            NavigationBar.hideLogin();
+        });
+
+        btnSignIn.addEventListener('click', () => {
+            const autherController = new AutherController();
+            autherController.getCode((redirect) => {
+                window.location.href = redirect.url;
+            });
+        });
     }
 
     populateBar(){
-        const profile = document.getElementById("profile");
-        const signIn = document.getElementById("sign-in")
-        if (localStorage.getItem("crawlerID")==null){
-            profile.classList.add("hidden");
-            signIn.classList.remove("hidden");
-        } else {
-            signIn.classList.add("hidden");
-            profile.classList.remove("hidden");
+        if (!localStorage.getItem("access_token")){
+            NavigationBar.hideLogin();
+            return;
         }
+
+        NavigationBar.hideSignUp();
     }
 }
