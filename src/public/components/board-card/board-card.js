@@ -57,11 +57,12 @@ export class BoardCard extends HTMLElement {
         }
 
         const title = document.createElement('h4');
+        title.setAttribute('class', 'web-text-cutter');
         title.textContent = this.webTitle;
         title.id = `${this.webID}-title`;
 
         const subtitle = document.createElement('p');
-        subtitle.setAttribute('class', 'board-card-subtitle');
+        subtitle.setAttribute('class', 'web-text-cutter');
         subtitle.textContent = this.webDescription || "Description";
         subtitle.id = `${this.webID}-subtitle`;
 
