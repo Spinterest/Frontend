@@ -1,5 +1,4 @@
 const localBaseURL = "http://spinback.eu-west-1.elasticbeanstalk.com";
-const remoteURL = "http://localhost:8080";
 
 const callTypes = {
     get: "GET",
@@ -576,7 +575,7 @@ export class AutherController{
         callback
     ){
         apiCallBuilder(
-            `${remoteURL}/${this.baseURL}/getCode`,
+            `${localBaseURL}/${this.baseURL}/getCode`,
             callTypes.get,
             callback
         )
@@ -587,7 +586,7 @@ export class AutherController{
         callback
     ){
         apiCallBuilder(
-            `${remoteURL}/${this.baseURL}/getAccessToken`,
+            `${localBaseURL}/${this.baseURL}/getAccessToken`,
             callTypes.post,
             callback,
             {code: code}
