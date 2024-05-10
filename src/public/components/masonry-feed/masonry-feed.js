@@ -147,6 +147,37 @@ export class MasonryFeed extends HTMLElement {
         });
     }
 
+    tagDropDownPopulate(){
+        const tagsInput = document.getElementById("inpTag");
+
+        if (tagsInput.value === '') {
+            this.complexClass.getTopTags(
+                this.populateTagDropDown.bind(this),
+                this.getExistingTags()
+            );
+            return;
+        }
+
+        this.tagClass.filterTags(
+            tagsInput.value,
+            this.getExistingTags(),
+            this.populateTagDropDown.bind(this)
+        );
+    }
+
+    submitSpin(event){
+        const inputImage = document.getElementById('inpImg');
+        if (inputImage.files.length === 0){
+            new Toast("Please enter a file to upload a spin", "error");
+            event.preventDefault();
+            return;
+        }
+
+        new Toast("Uploading Spin", "info");
+        document.body.style.cursor = "wait";
+        this.complexClass.getNewSpinLink(this.createSpin.bind(this));
+    }
+
     // TODO: Infinity Scroll
     populateFeed(data) {
         if (!data) {
@@ -241,52 +272,17 @@ export class MasonryFeed extends HTMLElement {
                 }
             );
 
-            tagsInput.addEventListener('focusin', () => {
-                if (tagsInput.value === '') {
-                    this.complexClass.getTopTags(
-                        this.populateTagDropDown.bind(this),
-                        this.getExistingTags()
-                    );
-                    return;
-                }
 
-                this.tagClass.filterTags(
-                    tagsInput.value,
-                    this.getExistingTags(),
-                    this.populateTagDropDown.bind(this)
-                );
-            });
+            tagsInput.removeEventListener('focusin', this.tagDropDownPopulate);
+            tagsInput.addEventListener('focusin', this.tagDropDownPopulate);
 
-            tagsInput.addEventListener('input', () => {
-                if (tagsInput.value === '') {
-                    this.complexClass.getTopTags(
-                        this.populateTagDropDown.bind(this),
-                        this.getExistingTags()
-                    );
-                    return;
-                }
-
-                this.tagClass.filterTags(
-                    tagsInput.value,
-                    this.getExistingTags(),
-                    this.populateTagDropDown.bind(this)
-                );
-            });
+            tagsInput.removeEventListener('input', this.tagDropDownPopulate);
+            tagsInput.addEventListener('input', this.tagDropDownPopulate);
         }
 
         const spinForm = document.getElementById("create-spin-form");
-        spinForm.addEventListener('submit', (event) => {
-            const inputImage = document.getElementById('inpImg');
-            if (inputImage.files.length === 0){
-                new Toast("Please enter a file to upload a spin", "error");
-                event.preventDefault();
-                return;
-            }
-
-            new Toast("Uploading Spin", "info");
-            document.body.style.cursor = "wait";
-            this.complexClass.getNewSpinLink(this.createSpin.bind(this));
-        });
+        spinForm.removeEventListener('submit', this.submitSpin);
+        spinForm.addEventListener('submit', this.submitSpin);
 
         const router = new Router();
         data.forEach(spin => {
