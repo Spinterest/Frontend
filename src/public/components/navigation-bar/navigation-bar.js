@@ -137,6 +137,8 @@ export class NavigationBar extends HTMLElement {
             localStorage.removeItem("crawlerEmail");
             localStorage.removeItem("crawlerToken");
             localStorage.removeItem("crawlerUserName");
+            localStorage.removeItem("access_token");
+            localStorage.removeItem("refresh_token");
             profile.classList.add("hidden");
             signIn.classList.remove("hidden");
             const script = document.createElement('script');
