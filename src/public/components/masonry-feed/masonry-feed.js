@@ -176,12 +176,6 @@ export class MasonryFeed extends HTMLElement {
 
                 article.appendChild(button);
             }
-            else {
-                existingButton.removeEventListener("click", this.createSpinShowModal);
-                existingButton.addEventListener('click', () => {
-                    this.createSpinShowModal();
-                });
-            }
 
             document.getElementById('inpImg').onchange = function () {
                 const fileName = this.files.item(0).name;
