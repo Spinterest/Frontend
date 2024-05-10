@@ -178,7 +178,6 @@ export class MasonryFeed extends HTMLElement {
         );
     }
 
-
     getExistingTags(){
         const tagOverFlow = document.getElementById("tag-overflow-area");
         const tagNames = [];
@@ -431,7 +430,7 @@ export class MasonryFeed extends HTMLElement {
                 const tags = this.getExistingTags();
                 if (tags.length !== 0){
                     this.tagClass.addTags(tags, (data) => {
-                        if (data.hasOwnProperty('error')) {
+                        if (data?.hasOwnProperty('error')) {
                             new Toast("There was an error trying to upload that tag data, please try again later.", "error");
                         }
                         else if (data?.hasOwnProperty('alert')) {
